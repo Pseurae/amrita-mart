@@ -1,0 +1,6 @@
+name="Toothbrush"
+image="brush.jpg"
+type="article"
+category="hygiene"
+stock=100
+price=50

@@ -1,0 +1,6 @@
+name="Pen"
+image="pens.jpg"
+type="article"
+category="stationary"
+stock=5
+price=20

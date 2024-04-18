@@ -1,0 +1,25 @@
+name="Kurkure"
+image="kurkure-green.jpg"
+type="food"
+defaultVariant=0
+
+[variants.green]
+stock=5
+price=20
+category="snack"
+image="kurkure-green.jpg"
+name="Green"
+
+[variants.lightgreen]
+stock=5
+price=20
+category="snack"
+image="kurkure-lightgreen.png"
+name="Light Green"
+
+[variants.orange]
+stock=5
+price=20
+category="snack"
+image="kurkure-orange.jpg"
+name="Orange"

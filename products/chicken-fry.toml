@@ -1,0 +1,6 @@
+name="Chicken Fry"
+image="chicken-fry.jpg"
+type="food"
+category="non-veg"
+stock=10
+price=100

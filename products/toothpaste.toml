@@ -1,0 +1,6 @@
+name="Toothpaste"
+image="colgate.jpg"
+type="article"
+category="hygiene"
+stock=100
+price=50

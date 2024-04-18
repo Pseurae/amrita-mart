@@ -1,0 +1,6 @@
+name="Chicken Biriyani"
+image="biriyani.png"
+type="food"
+category="non-veg"
+stock=10
+price=130
