@@ -71,7 +71,7 @@ export default function () {
                     ))}
                 </ul>
 
-                <input className="outline-none border p-3 rounded" type="text" placeholder="Message on the cake..." name="cakeMessage" id="cakeMessage" value={message} onChange={(e) => setMessage(e.target.value)} />
+                <input className="outline-none border p-3 rounded focus:border-blue-400" type="text" placeholder="Message on the cake..." name="cakeMessage" id="cakeMessage" value={message} onChange={(e) => setMessage(e.target.value)} />
 
                 <div className="flex flex-col gap-1">
                     <h1 className="font-medium text-lg">How much cake do you want? (in Kgs)</h1>
@@ -94,6 +94,8 @@ export default function () {
                             </span>) :
                             (<span className="ml-2">Kg</span>)
                         }
+
+                        <p className="ml-4 font-semibold">₹{ cakes[type].price * (quantity || customQuantity) }</p>
                     </div>
                 </div>
 
@@ -111,7 +113,7 @@ export default function () {
                     </div>
                 </div>
 
-                <textarea placeholder="Other specific requests..." name="otherRequest" id="" cols={50} rows={10} className="outline-none border p-3 rounded resize-none" value={otherRequest} onChange={(e) => setOtherRequest(e.target.value)}></textarea>
+                <textarea placeholder="Other specific requests..." name="otherRequest" id="" cols={50} rows={10} className="outline-none border p-3 rounded resize-none focus:border-blue-400" value={otherRequest} onChange={(e) => setOtherRequest(e.target.value)}></textarea>
 
                 <input type="button" className="bg-red-700 text-white font-semibold rounded px-5 py-2 disabled:bg-slate-400 disabled:cursor-not-allowed enabled:cursor-pointer" value={hasLoggedIn ? (isLoading ? "Loading..." : "Submit Cake Request") : "Please login to your account."} disabled={!hasLoggedIn || isLoading || (quantity == null && customQuantityError)} onClick={() => setModalOpened(true)} />
 

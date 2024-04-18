@@ -30,7 +30,7 @@ export default function () {
                 isBufferDirty.current = false;
             }
 
-            const previewImage = (product: ProductType) => (product._hasVariants ? product.variants[products.defaultVariant].image : product.image);
+            const previewImage = (product: ProductType) => (product._hasVariants ? product.variants[product.defaultVariant].image : product.image);
 
             return (
                 <ul ref={selectorScroller} className="overflow-auto grow h-full hide-scrollbar" onScroll={onScroll}>
@@ -79,10 +79,10 @@ export default function () {
                             <label className="font-medium">Preview Image</label>
 
                             <div className="h-48 w-48 border rounded overflow-hidden">
-                                <img src={imagePath(productClone.previewImage)} alt={productClone.previewImage} className="h-full w-full object-contain" />
+                                <img src={imagePath(productClone.image)} alt={productClone.image} className="h-full w-full object-contain" />
                             </div>
 
-                            <input className="outline-none border p-2 rounded" type="text" name="" id="" value={productClone.previewImage} onChange={(e) => changeDetails({ previewImage: e.target.value })} />
+                            <input className="outline-none border p-2 rounded" type="text" name="" id="" value={productClone.image} onChange={(e) => changeDetails({ previewImage: e.target.value })} />
 
                             <p>Given path must be relative to public/images/products folder.</p>
                         </div>
