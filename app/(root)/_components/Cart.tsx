@@ -7,6 +7,13 @@ import { useProducts } from "../../_context/products";
 import { LocalCartTransfer, useUser } from "../../_context/user";
 import Modal from "./Modal";
 
+import "@fortawesome/fontawesome-svg-core/styles.css"
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSquarePlus, faSquareMinus } from '@fortawesome/free-solid-svg-icons'
+
 type CartItemInfo = {
     name: string;
     variantName: string | null;
@@ -109,7 +116,7 @@ export default function () {
 
                                         return (
                                             <li key={"itemId:" + cartItem.itemId + " itemVariant:" + cartItem.itemVariant} className="flex gap-5 border rounded-md mb-2 px-3 py-2">
-                                                <img className="h-20 w-20 object-contain" src={imagePath(itemInfo.image)} alt={itemInfo.image} />
+                                                <img className="h-20 w-20 object-contain my-auto" src={imagePath(itemInfo.image)} alt={itemInfo.image} />
                                                 <div className="my-auto grow py-2">
                                                     <div className="flex justify-between mb-4">
                                                         <h1 className="text-lg font-semibold">{itemInfo.name + ((itemInfo.variantName != null && " - " + itemInfo.variantName) || "")}</h1>
@@ -117,11 +124,15 @@ export default function () {
                                                     </div>
 
                                                     <div className="flex justify-between">
-                                                        <h1 className="text-lg">₹{itemInfo.price}</h1>
+                                                        <h1 className="font-medium text-lg">₹{itemInfo.price}</h1>
                                                         <div className="my-auto gap-2 flex">
-                                                            <button className="w-6 h-6 text-center bg-gray-200 font-semibold text-gray-700 rounded-md" onClick={() => addToCart({ ...cartItem, quantity: 1 })}>+</button>
+                                                            <button className="font-semibold text-gray-700 rounded-md" onClick={() => addToCart({ ...cartItem, quantity: 1 })}>
+                                                                <FontAwesomeIcon className="fa-lg" icon={faSquarePlus} />
+                                                            </button>
                                                             <p className="text-lg">x<span className="font-semibold">{cartItem.quantity}</span></p>
-                                                            <button className="w-6 h-6 text-center bg-gray-200 font-semibold text-gray-700 rounded-md" onClick={() => removeFromCart(cartItem.itemId, cartItem.itemVariant)}>-</button>
+                                                            <button className="font-semibold text-gray-700 rounded-md" onClick={() => removeFromCart(cartItem.itemId, cartItem.itemVariant)}>
+                                                                <FontAwesomeIcon className='fa-lg' icon={faSquareMinus} />
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -56,7 +56,7 @@ const PasswordErrorStrings = [
     "Wrong password!"
 ];
 
-const textInputClasses = "border-b outline-none px-3 py-2 block w-full focus:border-blue-500";
+const textInputClasses = "border-b border-gray-200 outline-none px-3 py-2 block w-full focus:border-blue-500";
 const buttonClasses = "mt-4 w-80 border-2 transition enabled:hover:text-white disabled:border-gray-400 disabled:text-gray-400 py-2 font-semibold rounded-full";
 
 const loginButtonClasses = "enabled:text-blue-400 enabled:border-blue-400 enabled:hover:bg-blue-400";
@@ -145,11 +145,11 @@ export default function ({
 
         return (
             <>
-                <h1 className="font-bold text-center text-3xl mb-8">Welcome Back!</h1>
+                <h1 className="font-bold font-serif text-center text-4xl mb-8">Welcome Back!</h1>
 
                 <form onSubmit={onSubmit} className="flex flex-col gap-5">
-                    <Input placeholder="Username" error={errors.username} errorMessages={UsernameErrorStrings} autoComplete="off" className={textInputClasses} type="text" name="username" key="registerUsername" />
-                    <Input placeholder="Password" error={errors.password} errorMessages={PasswordErrorStrings} autoComplete="off" className={textInputClasses} type="password" name="password" key="registerPassword" />
+                    <Input placeholder="Username" error={errors.username} errorMessages={UsernameErrorStrings} autoComplete="off" className={textInputClasses} type="text" name="username" key="loginUsername" />
+                    <Input placeholder="Password" error={errors.password} errorMessages={PasswordErrorStrings} autoComplete="off" className={textInputClasses} type="password" name="password" key="loginPassword" />
 
                     <button disabled={loading} className={buttonClasses + " " + loginButtonClasses}>{loading ? "Logging in..." : "Login"}</button>
 
@@ -233,7 +233,7 @@ export default function ({
 
         return (
             <>
-                <h1 className="font-bold text-center text-3xl mb-8">Register</h1>
+                <h1 className="font-bold font-serif text-center text-4xl mb-8">Register</h1>
 
                 <form onSubmit={onSubmit} className="flex flex-col gap-5">
                     <Input placeholder="Username" error={errors.username} errorMessages={UsernameErrorStrings} autoComplete="off" className={textInputClasses} type="text" name="username" key="registerUsername" />

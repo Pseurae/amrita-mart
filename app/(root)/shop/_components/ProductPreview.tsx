@@ -38,7 +38,7 @@ const ProductPreview = ({ product }: { product: ProductType }) => {
 
                 <div>
                     <h2 className='font-semibold text-red-400'>{getCategoryName(getCategory())}</h2>
-                    <h1 className='font-bold text-xl'>{product.name}</h1>
+                    <h1 className='font-serif font-bold text-2xl'>{product.name}</h1>
                 </div>
 
                 {product._hasVariants ? (
@@ -48,10 +48,10 @@ const ProductPreview = ({ product }: { product: ProductType }) => {
                                 <VariantButton name="variants" id={variant._specId} key={variant._specId} variant={variant} checked={selVariant == i} onChange={() => setSelVariant(i)} />))
                             }
                         </div>
-                        <h2 className='font-medium text-lg'>₹{product.variants[selVariant!].price}</h2>
+                        <h2 className='font-semibold font-mono text-xl'>₹{product.variants[selVariant!].price}</h2>
                     </>
                 ) : (
-                    <h2 className='font-medium text-lg'>₹{product.price}</h2>
+                    <h2 className='font-semibold font-mono text-xl'>₹{product.price}</h2>
                 )}
 
                 <button className='mt-1 px-3 py-2 border-2 border-blue-400 rounded-full font-semibold text-blue-400 hover:bg-blue-400 hover:text-white transition'

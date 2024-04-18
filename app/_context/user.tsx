@@ -81,7 +81,7 @@ export const UserProvider = ({
     }, []);
 
     useEffect(() => {
-        if (loadedUser)
+        if (loadedUser && user != null)
         {
             sessionStorage.setItem('userSession', JSON.stringify(user));
             fetch('/api/users/update', {

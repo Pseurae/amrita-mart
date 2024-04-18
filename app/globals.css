@@ -9,6 +9,7 @@
 }
 
 body {
+  @apply text-base;
   margin: 0;
 }
 
