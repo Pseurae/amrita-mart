@@ -5,7 +5,7 @@ import { Product as ProductType, imagePath } from '../../../_types/product'
 import { InputHTMLAttributes, useState } from 'react'
 import { getCategoryName } from '../_lib/common';
 
-const VariantButton = ({ variant, ...props }: { variant: any } & InputHTMLAttributes<HTMLInputElement>) => (
+const VariantButton = ({ variant, ...props }: { variant: any } & Omit<InputHTMLAttributes<HTMLInputElement>, 'className' | 'type'>) => (
     <label
         className={'cursor-pointer flex gap-2 px-4 py-2 rounded-full border text-gray-500 border-gray-500 transition has-[:checked]:text-red-400 has-[:checked]:bg-red-50 has-[:checked]:border-red-400'}>
         <input className='hidden' type="radio" {...props} />

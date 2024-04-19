@@ -5,7 +5,7 @@ interface CakeButtonProps {
     cake: Cake;
 };
 
-export default function ({ cake, ...props }: CakeButtonProps & InputHTMLAttributes<HTMLInputElement>) {
+export default function ({ cake, ...props }: CakeButtonProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'className' | 'name' | 'value'>) {
     return (
         <label className="flex flex-col select-none items-center rounded-lg overflow-clip border transition duration-200 ease-in-out has-[:checked]:text-red-400 has-[:checked]:border-red-400 has-[:checked]:bg-pink-50">
             <input className="hidden" type="radio" name="type" value={cake._id} {...props} />

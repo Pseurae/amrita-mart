@@ -4,7 +4,7 @@ import { HTMLAttributes } from 'react';
 import { Product as ProductType, imagePath } from '../../../_types/product'
 import { getPreviewPrice } from '../_lib/common';
 
-export const Product = ({ product, ...props }: { product: ProductType } & HTMLAttributes<HTMLDivElement>) => {
+export const Product = ({ product, ...props }: { product: ProductType } & Omit<HTMLAttributes<HTMLDivElement>, 'className'>) => {
     const previewImage = product._hasVariants ? product.variants[product.defaultVariant].image : product.image;
 
     return (
