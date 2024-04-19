@@ -5,6 +5,13 @@ import { useUser } from "../_context/user"
 import { LoginStatus, RegisterStatus } from "../_types/user";
 import Modal from "./_components/Modal";
 
+import "@fortawesome/fontawesome-svg-core/styles.css"
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+
 enum UsernameErrors {
     Empty,
     Invalid,
@@ -60,12 +67,15 @@ const PasswordErrorStrings = [
 ];
 
 const textInputClasses = "border-b border-gray-200 outline-none px-3 py-2 block w-full focus:border-blue-500";
+const passwordInputClasses = "border-b border-gray-200 outline-none pl-3 pr-10 py-2 block w-full focus:border-blue-500";
 const buttonClasses = "mt-4 w-80 border-2 transition enabled:hover:text-white disabled:border-gray-400 disabled:text-gray-400 py-2 font-semibold rounded-full";
 
 const loginButtonClasses = "enabled:text-blue-400 enabled:border-blue-400 enabled:hover:bg-blue-400";
 const registerButtonClasses = "enabled:text-green-400 enabled:border-green-400 enabled:hover:bg-green-400";
 
-const Input = ({ error = null, errorMessages = [], ...props }: { error: number | null, errorMessages: string[] } & InputHTMLAttributes<HTMLInputElement>) => {
+type InputProps = { error: number | null, errorMessages: string[] } & InputHTMLAttributes<HTMLInputElement>;
+
+const Input = ({ error = null, errorMessages = [], ...props }: InputProps) => {
     return (
         <div>
             <input {...props} />
@@ -73,6 +83,25 @@ const Input = ({ error = null, errorMessages = [], ...props }: { error: number |
         </div>
     )
 }
+
+const Password = ({ error = null, errorMessages = [], ...props }: Omit<InputProps, 'type'>) => {
+    const [showPassword, setShowPassword] = useState(false);
+
+    return (
+        <div>
+            <div className="flex">
+                <input type={showPassword ? 'text' : 'password'} {...props} />
+
+                <span className="flex justify-around items-center relative">
+                    <a href="#" className="absolute right-0 w-6 mx-2 text-gray-400" onClick={(e) => { e.preventDefault(); setShowPassword(!showPassword); }}>
+                        <FontAwesomeIcon className="w-full" icon={showPassword ? faEye : faEyeSlash} />
+                    </a>
+                </span>
+            </div>
+            {error != null && <p className="mt-2 text-red-600 text-sm font-medium">{errorMessages[error]}</p>}
+        </div>
+    )
+};
 
 const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
     const { setShowLoginModal, login } = useUser();
@@ -142,7 +171,7 @@ const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
 
             <form onSubmit={onSubmit} className="flex flex-col gap-5">
                 <Input placeholder="Username" error={errors.username} errorMessages={UsernameErrorStrings} autoComplete="off" className={textInputClasses} type="text" name="username" key="loginUsername" />
-                <Input placeholder="Password" error={errors.password} errorMessages={PasswordErrorStrings} autoComplete="off" className={textInputClasses} type="password" name="password" key="loginPassword" />
+                <Password placeholder="Password" error={errors.password} errorMessages={PasswordErrorStrings} autoComplete="off" className={passwordInputClasses} name="password" key="loginPassword" />
 
                 <button disabled={loading} className={buttonClasses + " " + loginButtonClasses}>{loading ? "Logging in..." : "Login"}</button>
 
@@ -234,7 +263,7 @@ const Register = ({ changeToLogin }: { changeToLogin: () => void }) => {
                 <Input placeholder="Username" error={errors.username} errorMessages={UsernameErrorStrings} autoComplete="off" className={textInputClasses} type="text" name="username" key="registerUsername" />
                 <Input placeholder="Name" error={errors.fullname} errorMessages={FullnameErrorStrings} autoComplete="off" className={textInputClasses} type="text" name="fullname" key="registerFullname" />
                 <Input placeholder="Email" error={errors.email} errorMessages={EmailErrorStrings} autoComplete="off" className={textInputClasses} type="email" name="email" key="registerEmail" />
-                <Input placeholder="Password" error={errors.password} errorMessages={PasswordErrorStrings} autoComplete="off" className={textInputClasses} type="password" name="password" key="registerPassword" />
+                <Password placeholder="Password" error={errors.password} errorMessages={PasswordErrorStrings} autoComplete="off" className={passwordInputClasses} name="password" key="registerPassword" />
 
                 <button disabled={loading} className={buttonClasses + " " + registerButtonClasses}>{loading ? "Registering..." : "Register"}</button>
                 <h1 className="text-opacity-60 font-semibold text-black text-center">Already have an account? <a className="hover:underline text-opacity-100 text-black cursor-pointer" onClick={changeToLogin}>Login!</a></h1>
