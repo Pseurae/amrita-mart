@@ -68,13 +68,13 @@ export default function () {
                             {showUserDropdown && (
                                 <ProfileDropdown close={() => setShowUserDropdown(false)}>
                                     <p className="px-5 py-2 w-full text-nowrap">Logged in: <span className="font-medium">{user!.userName}</span></p>
-                                    <Link href="/profile" className="block w-full px-5 py-2 hover:bg-gray-200">Profile</Link>
+                                    <Link href="/profile" className="block w-full px-5 py-2 hover:bg-gray-200" onClick={() => setShowUserDropdown(false)}>Profile</Link>
                                     <a className="block w-full px-5 py-2 hover:bg-gray-200 cursor-pointer" onClick={logout}>Logout</a>
                                 </ProfileDropdown>
                             )}
                         </>
                     ) : (
-                        <a className="py-2.5 px-3 rounded-lg bg-sky-400 text-white transition shadow-md shadow-sky-400/40 hover:shadow-sky-300/40 hover:bg-sky-300 block text-lg cursor-pointer" onClick={() => setShowLoginModal(true)}>
+                        <a className="py-2.5 px-3 rounded-lg bg-sky-400 text-white transition shadow-md shadow-sky-400/40 hover:shadow-sky-300/40 hover:bg-sky-300 block text-lg cursor-pointer" onClick={openLoginModal}>
                             Login
                         </a>
                     )}
