@@ -8,15 +8,17 @@ const fraunces = Fraunces({ display: "swap", subsets: ["latin"], variable: '--fo
 const dmSerifDisplay = Playfair_Display({ display: 'swap', subsets: ['latin'], variable: '--font-dmserif', weight: '800' });
 
 export default function ({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" className={`${figtree.className} ${fraunces.variable} ${dmSerifDisplay.variable}`}>
-      <ProductProvider>
-        <body>{children}</body>
-      </ProductProvider>
-    </html>
-  );
+    return (
+        <html lang="en" className={`${figtree.className} ${fraunces.variable} ${dmSerifDisplay.variable}`}>
+            <ProductProvider>
+                <body>
+                    {children}
+                </body>
+            </ProductProvider>
+        </html>
+    );
 }
