@@ -115,7 +115,7 @@ export default function () {
 
                 <textarea placeholder="Other specific requests..." name="otherRequest" id="" cols={50} rows={10} className="outline-none border p-3 rounded resize-none focus:border-blue-400" value={otherRequest} onChange={(e) => setOtherRequest(e.target.value)}></textarea>
 
-                <input type="button" className="bg-red-700 text-white font-semibold rounded px-5 py-2 disabled:bg-slate-400 disabled:cursor-not-allowed enabled:cursor-pointer" value={hasLoggedIn ? (isLoading ? "Loading..." : "Submit Cake Request") : "Please login to your account."} disabled={!hasLoggedIn || isLoading || (quantity == null && customQuantityError)} onClick={() => setModalOpened(true)} />
+                <input type="button" className="transition px-5 py-2 border-2 font-semibold rounded-full border-red-500 text-red-500 enabled:hover:text-white enabled:hover:text-white enabled:hover:bg-red-500 disabled:text-slate-400 disabled:border-slate-400 disabled:cursor-not-allowed" value={hasLoggedIn ? (isLoading ? "Loading..." : "Submit Cake Request") : "Please login to your account."} disabled={!hasLoggedIn || isLoading || (quantity == null && customQuantityError)} onClick={() => setModalOpened(true)} />
 
                 <Modal isModalOpen={modalOpened} closeModal={() => setModalOpened(false)} parentStyles="grid place-content-center bg-black/[0.6]">
                     <div className="bg-white rounded-lg z-50 p-12 flex flex-col gap-3">
@@ -124,8 +124,8 @@ export default function () {
                             <h2 className="text-center text-lg font-medium text-black text-opacity-60">You cannot make modifications to this order later on.</h2>
                         </div>
 
-                        <button className="transition border-2 border-green-500 hover:text-white hover:bg-green-500 font-semibold rounded-full py-2.5" type="submit">Confirm</button>
-                        <button className="transition border-2 border-red-500 hover:text-white hover:bg-red-500 font-semibold rounded-full py-2.5" onClick={() => setModalOpened(false)}>Close</button>
+                        <button className="transition border-2 border-green-400 hover:text-white hover:bg-green-500 font-semibold rounded-full py-2" type="submit">Confirm</button>
+                        <button className="transition border-2 border-red-400 hover:text-white hover:bg-red-500 font-semibold rounded-full py-2" onClick={() => setModalOpened(false)}>Close</button>
                     </div>
                 </Modal>
             </form>

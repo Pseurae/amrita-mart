@@ -12,7 +12,7 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSquarePlus, faSquareMinus } from '@fortawesome/free-solid-svg-icons'
+import { faSquarePlus, faSquareMinus, faTrash, faX } from '@fortawesome/free-solid-svg-icons'
 
 type CartItemInfo = {
     name: string;
@@ -97,7 +97,9 @@ export default function () {
             <div className="absolute h-screen w-1/4 right-0 bg-white border-l shadow-sm py-5 flex flex-col gap-5">
                 <div className="flex justify-between px-8">
                     <h1 className="py-1.5 text-xl font-semibold">Shopping Cart</h1>
-                    <button className="font-semibold px-3 py-1.5 bg-red-200 text-red-800 hover:bg-red-300 rounded-lg" onClick={() => { setCartOpen(false) }}>Close</button>
+                    <button className="py-1.5 transition hover:text-gray-500" onClick={() => { setCartOpen(false) }}>
+                        <FontAwesomeIcon className="fa-2xl" icon={faX} />
+                    </button>
                 </div>
 
                 {cartItems.length == 0 ?
@@ -117,21 +119,23 @@ export default function () {
                                         return (
                                             <li key={"itemId:" + cartItem.itemId + " itemVariant:" + cartItem.itemVariant} className="flex gap-5 border rounded-md mb-2 px-3 py-2">
                                                 <img className="h-20 w-20 object-contain my-auto" src={imagePath(itemInfo.image)} alt={itemInfo.image} />
-                                                <div className="my-auto grow py-2">
+                                                <div className="my-auto grow flex flex-col space-between">
                                                     <div className="flex justify-between mb-4">
                                                         <h1 className="text-lg font-semibold">{itemInfo.name + ((itemInfo.variantName != null && " - " + itemInfo.variantName) || "")}</h1>
-                                                        <button className="text-red-500" onClick={() => { removeItemsFromCart(cartItem.itemId, cartItem.itemVariant) }}>Remove</button>
+                                                        <button className="transition text-red-500 hover:text-red-400" onClick={() => { removeItemsFromCart(cartItem.itemId, cartItem.itemVariant) }}>
+                                                            <FontAwesomeIcon className="fa-lg" icon={faTrash} />
+                                                        </button>
                                                     </div>
 
                                                     <div className="flex justify-between">
                                                         <h1 className="font-medium text-lg">₹{itemInfo.price}</h1>
-                                                        <div className="my-auto gap-2 flex">
-                                                            <button className="font-semibold text-gray-700 rounded-md" onClick={() => addToCart({ ...cartItem, quantity: 1 })}>
-                                                                <FontAwesomeIcon className="fa-lg" icon={faSquarePlus} />
+                                                        <div className="my-auto gap-3 flex">
+                                                            <button className="transition text-slate-400 hover:text-slate-300" onClick={() => addToCart({ ...cartItem, quantity: 1 })}>
+                                                                <FontAwesomeIcon className="fa-xl" icon={faSquarePlus} />
                                                             </button>
                                                             <p className="text-lg">x<span className="font-semibold">{cartItem.quantity}</span></p>
-                                                            <button className="font-semibold text-gray-700 rounded-md" onClick={() => removeFromCart(cartItem.itemId, cartItem.itemVariant)}>
-                                                                <FontAwesomeIcon className='fa-lg' icon={faSquareMinus} />
+                                                            <button className="transition text-slate-400 hover:text-slate-300" onClick={() => removeFromCart(cartItem.itemId, cartItem.itemVariant)}>
+                                                                <FontAwesomeIcon className='fa-xl' icon={faSquareMinus} />
                                                             </button>
                                                         </div>
                                                     </div>
@@ -151,7 +155,7 @@ export default function () {
                                         <h1 className="text-md font-semibold">₹{totalPrice()}</h1>
                                     </div>
 
-                                    <button className="mx-8 transition border-2 border-red-500 py-3 font-semibold rounded-full enabled:text-red-500 enabled:hover:bg-red-500 enabled:hover:text-white disabled:text-gray-400 disabled:border-gray-400" onClick={tryCheckout} disabled={checkingOut}>{checkingOut ? "Checking out..." : "Checkout"}</button>
+                                    <button className="mx-8 transition border-2 border-red-500 py-3 font-semibold rounded-full enabled:text-red-500 enabled:hover:bg-red-500 enabled:hover:text-white disabled:text-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed" onClick={tryCheckout} disabled={checkingOut}>{checkingOut ? "Checking out..." : "Checkout"}</button>
                                 </div>
                             </>
                         )

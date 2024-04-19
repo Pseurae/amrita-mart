@@ -68,7 +68,7 @@ const PasswordErrorStrings = [
 
 const textInputClasses = "border-b border-gray-200 outline-none px-3 py-2 block w-full focus:border-blue-500";
 const passwordInputClasses = "border-b border-gray-200 outline-none pl-3 pr-10 py-2 block w-full focus:border-blue-500";
-const buttonClasses = "mt-4 w-80 border-2 transition enabled:hover:text-white disabled:border-gray-400 disabled:text-gray-400 py-2 font-semibold rounded-full";
+const buttonClasses = "mt-4 w-80 border-2 transition enabled:hover:text-white disabled:border-gray-400 disabled:text-gray-400 disabled:cursor-not-allowed py-2 font-semibold rounded-full";
 
 const loginButtonClasses = "enabled:text-blue-400 enabled:border-blue-400 enabled:hover:bg-blue-400";
 const registerButtonClasses = "enabled:text-green-400 enabled:border-green-400 enabled:hover:bg-green-400";
