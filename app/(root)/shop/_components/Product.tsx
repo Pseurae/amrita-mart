@@ -8,7 +8,7 @@ export const Product = ({ product, ...props }: { product: ProductType } & HTMLAt
     const previewImage = product._hasVariants ? product.variants[product.defaultVariant].image : product.image;
 
     return (
-        <div {...props} className='cursor-pointer border rounded-lg bg-white overflow-clip flex flex-col group transition ease-in-out ease-in-out hover:text-red-400 hover:border-red-400 hover:bg-pink-50' >
+        <div {...props} className='cursor-pointer border rounded-lg bg-white overflow-clip flex flex-col group transition ease-in-out ease-in-out hover:text-red-400 hover:border-red-400 hover:bg-pink-50 hover:shadow-lg hover:shadow-pink-100/75' >
             <div className='mb-auto h-64 overflow-hidden place-content-center bg-white'>
                 <img className='h-full w-full object-cover group-hover:scale-105 transition ease-in-out duration-200' src={imagePath(previewImage)} alt={previewImage} />
             </div>
