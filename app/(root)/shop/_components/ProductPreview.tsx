@@ -54,7 +54,7 @@ const ProductPreview = ({ product }: { product: ProductType }) => {
                     <h2 className='font-semibold font-mono text-xl'>₹{product.price}</h2>
                 )}
 
-                <button className='mt-1 px-3 py-2 border-2 border-blue-400 rounded-full font-semibold text-blue-400 hover:bg-blue-400 hover:text-white transition'
+                <button className='mt-1 px-3 py-2 border-2 border-rose-400 rounded-full font-semibold text-rose-400 hover:bg-rose-400 hover:text-white transition'
                     onClick={() => addToCart({ itemId: product._id, itemVariant: variantId, quantity: 1 })}>
                     Add to Cart!
                 </button>

@@ -254,7 +254,7 @@ export default function ({
     return (
         <>
             <Modal isModalOpen={showLoginModal} closeModal={() => setShowLoginModal(false)} parentStyles="grid place-content-center bg-black/[0.6] backdrop-blur-sm">
-                <div className={`bg-gradient-to-b rounded-xl shadow-lg ${(register ? "from-lime-500 to-green-500" : "from-cyan-500 to-blue-500")}`}>
+                <div className={`bg-gradient-to-b rounded-xl shadow-lg ${(register ? "from-lime-400 to-green-400" : "from-cyan-400 to-blue-400")}`}>
                     <div className="m-2 bg-white rounded-lg">
                         <div className="p-12">
                             {(register ? <Register changeToLogin={() => setRegister(false)} /> : <Login changeToRegister={() => setRegister(true)} />)}
