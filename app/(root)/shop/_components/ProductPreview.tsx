@@ -34,7 +34,7 @@ const ProductPreview = ({ product }: { product: ProductType }) => {
     const variantId = (product._hasVariants ? product.variants[selVariant!]._specId : null);
 
     return (
-        <div className="bg-gradient-to-b rounded-3xl shadow-lg from-pink-400 to-rose-400 background-animate">
+        <div className="bg-gradient-to-b rounded-3xl shadow-lg from-pink-400 to-rose-400">
             <div className='m-2 flex flex-col bg-slate-100 p-12 rounded-2xl gap-2'>
                 <div className="w-96 h-96 rounded-xl bg-white overflow-hidden shadow-xl mb-2">
                     <img className='h-full w-full object-contain' src={imagePath(previewImage)} alt="" />
