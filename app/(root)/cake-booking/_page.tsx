@@ -95,7 +95,7 @@ export default function () {
                             (<span className="ml-2">Kg</span>)
                         }
 
-                        <p className="ml-4 font-semibold">₹{ cakes[type].price * (quantity || customQuantity) }</p>
+                        <p className="ml-4 font-semibold">₹{cakes[type].price * (quantity || customQuantity)}</p>
                     </div>
                 </div>
 
