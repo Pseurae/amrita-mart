@@ -6,7 +6,7 @@ import { InputHTMLAttributes, useState } from 'react'
 import { getCategoryName } from '../_lib/common';
 
 const VariantButton = ({ variant, ...props }: { variant: any } & InputHTMLAttributes<HTMLInputElement>) => (
-    <label 
+    <label
         className={'cursor-pointer flex gap-2 px-4 py-2 rounded-full border text-gray-500 border-gray-500 transition has-[:checked]:text-red-400 has-[:checked]:bg-red-50 has-[:checked]:border-red-400'}>
         <input className='hidden' type="radio" {...props} />
         <img className='h-6 w-6 object-cover rounded-full' src={imagePath(variant.image)} alt={variant.image} />
@@ -15,7 +15,7 @@ const VariantButton = ({ variant, ...props }: { variant: any } & InputHTMLAttrib
 );
 
 const ProductPreview = ({ product }: { product: ProductType }) => {
-    const { addToCart } = useUser();
+    const { addToCart, checkQuantity } = useUser();
     const [selVariant, setSelVariant] = useState<number | null>(product._hasVariants ? product.defaultVariant : null);
 
     const getCategory = () => {
@@ -24,6 +24,10 @@ const ProductPreview = ({ product }: { product: ProductType }) => {
         }
 
         return product.variants[selVariant!].category;
+    }
+
+    const addItemToCart = () => {
+        addToCart({ itemId: product._id, itemVariant: variantId, quantity: 1 });
     }
 
     const previewImage = product._hasVariants ? product.variants[selVariant!].image : product.image;
@@ -54,9 +58,8 @@ const ProductPreview = ({ product }: { product: ProductType }) => {
                     <h2 className='font-semibold font-mono text-xl'>₹{product.price}</h2>
                 )}
 
-                <button className='mt-1 px-3 py-2 border-2 border-rose-400 rounded-full font-semibold text-rose-400 hover:bg-rose-400 hover:text-white transition'
-                    onClick={() => addToCart({ itemId: product._id, itemVariant: variantId, quantity: 1 })}>
-                    Add to Cart!
+                <button className='mt-1 px-3 py-2 border-2 border-rose-400 rounded-full font-semibold text-rose-400 hover:bg-rose-400 hover:text-white transition' onClick={addItemToCart}>
+                    Add to Cart! ({checkQuantity(product._id, variantId)})
                 </button>
             </div>
         </div>
