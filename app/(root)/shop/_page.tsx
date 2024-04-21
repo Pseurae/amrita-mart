@@ -46,7 +46,7 @@ const PlaceholderList = () => {
     )
 };
 
-export default function () {
+export default function ShopPage_ () {
     const [modalProduct, setModalProduct] = useState<ProductType | null>(null);
     const [searchPrompt, setSearchPrompt] = useState<string>("");
 
@@ -69,7 +69,7 @@ export default function () {
                 </div>
             </div>
 
-            <Modal isModalOpen={modalProduct != null} closeModal={() => setModalProduct(null)} parentStyles='bg-black/[0.6] backdrop-blur-sm grid place-content-center'>
+            <Modal isModalOpen={modalProduct != null} closeModal={() => setModalProduct(null)} parentStyles='grid place-content-center' overlayStyles="bg-black/[0.6] backdrop-blur-sm">
                 <ProductPreview product={modalProduct!} />
             </Modal>
         </>

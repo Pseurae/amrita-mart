@@ -7,7 +7,7 @@ const figtree = Figtree({ display: "swap", subsets: ['latin'], variable: '--font
 const fraunces = Fraunces({ display: "swap", subsets: ["latin"], variable: '--font-fraunces' });
 const dmSerifDisplay = Playfair_Display({ display: 'swap', subsets: ['latin'], variable: '--font-dmserif', weight: '800' });
 
-export default function ({
+export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;

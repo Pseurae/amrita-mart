@@ -2,7 +2,7 @@
 
 import { useUser } from "../../_context/user";
 import { FormEvent, useEffect, useState } from "react";
-import { cakes } from "./_lib/common";
+import { cakes } from "../../_lib/cakes";
 import CakeButton from "./_components/CakeButton";
 import Modal from '../_components/Modal'
 
@@ -11,9 +11,11 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faSpinner, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
 
-export default function () {
+import { motion } from "framer-motion";
+
+export default function _CakeBooking() {
     const { addCakeOrder, hasLoggedIn } = useUser();
     const [type, setType] = useState(0);
     const [message, setMessage] = useState("");
@@ -122,9 +124,15 @@ export default function () {
 
                 <textarea placeholder="Other specific requests..." name="otherRequest" id="" cols={50} rows={10} className="outline-none border p-3 rounded resize-none focus:border-blue-400" value={otherRequest} onChange={(e) => setOtherRequest(e.target.value)}></textarea>
 
-                <input type="button" className="transition px-5 py-2 border-2 font-semibold rounded-full border-red-500 text-red-500 enabled:hover:text-white enabled:hover:text-white enabled:hover:bg-red-500 disabled:text-slate-400 disabled:border-slate-400 disabled:cursor-not-allowed" value={hasLoggedIn ? (isLoading ? "Loading..." : "Submit Cake Request") : "Please login to your account."} disabled={!hasLoggedIn || isLoading || (quantity == null && customQuantityError)} onClick={() => setModalOpened(true)} />
+                <button className="transition px-5 py-2 border-2 font-semibold rounded-full border-red-500 text-red-500 enabled:hover:text-white enabled:hover:text-white enabled:hover:bg-red-500 disabled:text-slate-400 disabled:border-slate-400 disabled:cursor-not-allowed" disabled={!hasLoggedIn || isLoading || (quantity == null && customQuantityError)} onClick={() => setModalOpened(true)}>
+                    {hasLoggedIn ? (isLoading ? (
+                        <>
+                            <FontAwesomeIcon className="animate-spin" icon={faSpinner} />   Submitting...
+                        </>
+                    ) : "Submit Cake Request") : "Please login to your account."}
+                </button>
 
-                <Modal isModalOpen={modalOpened} closeModal={() => setModalOpened(false)} parentStyles="grid place-content-center bg-black/[0.6]">
+                <Modal isModalOpen={modalOpened} closeModal={() => setModalOpened(false)} parentStyles="grid place-content-center" overlayStyles="bg-black/[0.6] backdrop-blur-sm">
                     <ConfirmDialog closeDialog={() => setModalOpened(false)} />
                 </Modal>
             </form>
@@ -132,9 +140,15 @@ export default function () {
     )
 }
 
+const PopupAnimationVariants = {
+    hidden: { y: '50%', opacity: 0 },
+    visible: { y: '0%', opacity: 1 },
+    exit: { y: '50%', opacity: 0 }
+};
+
 const ConfirmDialog = ({ closeDialog }: { closeDialog: () => void }) => {
     return (
-        <div className="bg-gradient-to-b rounded-xl shadow-lg from-[#38ef7d] to-[#11998e]">
+        <motion.div variants={PopupAnimationVariants} initial="hidden" animate="visible" exit="exit" transition={{ ease: 'easeInOut' }} className="bg-gradient-to-b rounded-xl shadow-lg from-[#38ef7d] to-[#11998e]">
             <div className="m-2 bg-white rounded-lg z-50 p-12 flex flex-col gap-3">
                 <FontAwesomeIcon className="fa-5x" icon={faTriangleExclamation} />
                 <div className="mb-3">
@@ -149,6 +163,6 @@ const ConfirmDialog = ({ closeDialog }: { closeDialog: () => void }) => {
                     Close
                 </button>
             </div>
-        </div>
+        </motion.div>
     )
 }

@@ -8,35 +8,37 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartShopping, faUser, faAngleDown } from '@fortawesome/free-solid-svg-icons'
+import { faCartShopping, faUser, faAngleDown, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { useCallback, useEffect, useRef, useState } from "react";
+import PlaceholderBar from "./PlaceholderBar";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ProfileDropdown = ({ children, close }: { children: React.ReactNode, close: () => void }) => {
     const wrapperRef = useRef<HTMLDivElement>(null!);
 
     const onClick = useCallback((e: MouseEvent) => {
-        if (!wrapperRef.current?.contains(e.target as Node)) close();
-    }, []); 
+        console.log("Test");
+        if (!wrapperRef.current?.contains(e.target as Node)) { 
+            close(); 
+        }
+    }, [close]);
 
     useEffect(() => {
         setTimeout(() => window.addEventListener('click', onClick));
-
-        return () => {
-            window.removeEventListener('click', onClick);
-        }
-    }, []);
+        return () => window.removeEventListener('click', onClick);
+    }, [onClick]);
 
     return (
-        <div className="mt-16 absolute bg-white top-0 right-0 w-fit border rounded-lg shadow-lg">
-            <div ref={wrapperRef} className="flex flex-col">
+        <div className="min-w-56 mt-[4.5rem] absolute bg-white top-0 right-0 w-fit border rounded-lg">
+            <div ref={wrapperRef} className="flex flex-col shadow-lg">
                 {children}
             </div>
         </div>
     );
 }
 
-export default function () {
-    const { setShowLoginModal, user, hasLoggedIn, setCartLoadAction, logout, cartLoaded, getCartItemCount, setCartOpen } = useUser();
+export default function Navbar() {
+    const { setShowLoginModal, user, hasLoggedIn, setCartLoadAction, logout, cartLoaded, getCartItemCount, setCartOpen, loadedUser } = useUser();
     const [showUserDropdown, setShowUserDropdown] = useState(false);
 
     const openLoginModal = () => {
@@ -59,24 +61,28 @@ export default function () {
                 </li>
 
                 <li className="relative">
-                    {hasLoggedIn ? (
-                        <>
-                            <a className="py-2.5 px-3 rounded-lg cursor-pointer block text-lg hover:bg-gray-100" onClick={() => setShowUserDropdown(!showUserDropdown)}>
-                                <FontAwesomeIcon className="mr-1" icon={faUser} /> {user!.fullName} <FontAwesomeIcon className="ml-1" icon={faAngleDown} />
-                            </a>
+                    {loadedUser ? (
+                        hasLoggedIn ? (
+                            <>
+                                <a className="py-2.5 px-3 rounded-lg cursor-pointer block text-lg hover:bg-gray-100" onClick={() => setShowUserDropdown(val => !val)}>
+                                    <FontAwesomeIcon className="mr-1" icon={faUser} /> {user!.fullName} <FontAwesomeIcon className="ml-1" icon={faAngleDown} />
+                                </a>
 
-                            {showUserDropdown && (
-                                <ProfileDropdown close={() => setShowUserDropdown(false)}>
-                                    <p className="px-5 py-2 w-full text-nowrap">Logged in: <span className="font-medium">{user!.userName}</span></p>
-                                    <Link href="/profile" className="block w-full px-5 py-2 hover:bg-gray-200" onClick={() => setShowUserDropdown(false)}>Profile</Link>
-                                    <a className="block w-full px-5 py-2 hover:bg-gray-200 cursor-pointer" onClick={logout}>Logout</a>
-                                </ProfileDropdown>
-                            )}
-                        </>
+                                {showUserDropdown && (
+                                    <ProfileDropdown key="profileDropdown" close={() => setShowUserDropdown(false)}>
+                                        <p className="px-5 py-2 w-full text-nowrap">Logged in: <span className="font-medium">{user!.userName}</span></p>
+                                        <Link href="/profile" className="block w-full px-5 py-2 hover:bg-gray-200" onClick={() => setShowUserDropdown(false)}><FontAwesomeIcon className="mr-1" icon={faUser} /> Profile</Link>
+                                        <a className="block w-full px-5 py-2 hover:bg-gray-200 cursor-pointer" onClick={() => { setShowUserDropdown(false); logout(); }}><FontAwesomeIcon className="mr-1" icon={faRightFromBracket} /> Logout</a>
+                                    </ProfileDropdown>
+                                )}
+                            </>
+                        ) : (
+                            <a className="py-2.5 px-3 rounded-lg bg-sky-400 text-white transition shadow-md shadow-sky-400/40 hover:shadow-sky-300/40 hover:bg-sky-300 block text-lg cursor-pointer" onClick={openLoginModal}>
+                                Login
+                            </a>
+                        )
                     ) : (
-                        <a className="py-2.5 px-3 rounded-lg bg-sky-400 text-white transition shadow-md shadow-sky-400/40 hover:shadow-sky-300/40 hover:bg-sky-300 block text-lg cursor-pointer" onClick={openLoginModal}>
-                            Login
-                        </a>
+                        <PlaceholderBar className="w-24" />
                     )}
                 </li>
             </ul>

@@ -6,20 +6,20 @@ defaultVariant=0
 [variants.oreo]
 stock=5
 price=50
-category="refreshment"
+category="beverage"
 image="oreo-milkshake.jpg"
 name="Oreo"
 
 [variants.strawberry]
 stock=5
 price=70
-category="refreshment"
+category="beverage"
 image="strawberry-milkshake.jpg"
 name="Strawberry"
 
 [variants.apple]
 stock=5
 price=70
-category="refreshment"
+category="beverage"
 image="apple-milkshake.jpg"
 name="Apple"

@@ -20,7 +20,7 @@ export const createNewCakeOrder = (order: CakeOrder): string => {
 
     const id = randomUUID();
     const filePath = path.join(CAKEORDERS_FOLDER, id + ".toml");
-    fs.writeFileSync(filePath, stringify(order), 'utf-8');
+    fs.writeFileSync(filePath, stringify({ ...order, date: new Date().getTime() }), 'utf-8');
 
     return id;
 }

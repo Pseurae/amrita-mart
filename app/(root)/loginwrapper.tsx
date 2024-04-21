@@ -10,7 +10,9 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faEyeSlash, faSpinner } from '@fortawesome/free-solid-svg-icons'
+
+import { motion } from "framer-motion";
 
 enum UsernameErrors {
     Empty,
@@ -173,7 +175,11 @@ const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
                 <Input placeholder="Username" error={errors.username} errorMessages={UsernameErrorStrings} autoComplete="off" className={textInputClasses} type="text" name="username" key="loginUsername" />
                 <Password placeholder="Password" error={errors.password} errorMessages={PasswordErrorStrings} autoComplete="off" className={passwordInputClasses} name="password" key="loginPassword" />
 
-                <button disabled={loading} className={buttonClasses + " " + loginButtonClasses}>{loading ? "Logging in..." : "Login"}</button>
+                <button disabled={loading} className={buttonClasses + " " + loginButtonClasses}>
+                    {loading ? (<>
+                        <FontAwesomeIcon className="animate-spin" icon={faSpinner} />   Logging in...
+                    </>) : "Login"}
+                </button>
 
                 <h1 className="text-opacity-60 font-semibold text-black text-center">Don't have an account? <a className="hover:underline text-opacity-100 text-black cursor-pointer" onClick={changeToRegister}>Sign Up!</a></h1>
             </form>
@@ -265,14 +271,24 @@ const Register = ({ changeToLogin }: { changeToLogin: () => void }) => {
                 <Input placeholder="Email" error={errors.email} errorMessages={EmailErrorStrings} autoComplete="off" className={textInputClasses} type="email" name="email" key="registerEmail" />
                 <Password placeholder="Password" error={errors.password} errorMessages={PasswordErrorStrings} autoComplete="off" className={passwordInputClasses} name="password" key="registerPassword" />
 
-                <button disabled={loading} className={buttonClasses + " " + registerButtonClasses}>{loading ? "Registering..." : "Register"}</button>
+                <button disabled={loading} className={buttonClasses + " " + registerButtonClasses}>{loading ? (
+                    <>
+                        <FontAwesomeIcon className="animate-spin" icon={faSpinner} />   Registering...
+                    </>) : "Register"}
+                </button>
                 <h1 className="text-opacity-60 font-semibold text-black text-center">Already have an account? <a className="hover:underline text-opacity-100 text-black cursor-pointer" onClick={changeToLogin}>Login!</a></h1>
             </form>
         </>
     )
 }
 
-export default function ({
+const PopupAnimationVariants = {
+    hidden: { y: '50%', opacity: 0 },
+    visible: { y: '0%', opacity: 1 },
+    exit: { y: '50%', opacity: 0 }
+};
+
+export default function LoginWrapper({
     children,
 }: Readonly<{
     children: React.ReactNode;
@@ -282,14 +298,16 @@ export default function ({
 
     return (
         <>
-            <Modal isModalOpen={showLoginModal} closeModal={() => setShowLoginModal(false)} parentStyles="grid place-content-center bg-black/[0.6] backdrop-blur-sm">
-                <div className={`bg-gradient-to-b rounded-xl shadow-lg ${(register ? "from-lime-400 to-green-400" : "from-cyan-400 to-blue-400")}`}>
+            <Modal isModalOpen={showLoginModal} closeModal={() => setShowLoginModal(false)} parentStyles="grid place-content-center" overlayStyles="bg-black/[0.6] backdrop-blur-sm">
+                <motion.div className={`bg-gradient-to-b rounded-xl shadow-lg ${(register ? "from-lime-400 to-green-400" : "from-cyan-400 to-blue-400")}`}
+                    variants={PopupAnimationVariants} initial="hidden" animate="visible" exit="exit" transition={{ ease: 'easeInOut' }}
+                >
                     <div className="m-2 bg-white rounded-lg">
                         <div className="p-12">
                             {(register ? <Register changeToLogin={() => setRegister(false)} /> : <Login changeToRegister={() => setRegister(true)} />)}
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </Modal>
             {children}
         </>

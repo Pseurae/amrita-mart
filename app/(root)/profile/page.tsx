@@ -5,7 +5,7 @@ export const metadata: Metadata = {
     title: "AmritaMart - Profile",
 };
 
-export default async function () {
+export default function ProfilePage () {
     return (
         <Page />
     );

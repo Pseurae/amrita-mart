@@ -14,7 +14,7 @@ export const createNewProductOrder = (order: CartItem[]): string => {
     const id = randomUUID();
     const filePath = path.join(PRODUCTORDERS_FOLDER, id + ".toml");
 
-    fs.writeFileSync(filePath, stringify({ order } as any), 'utf-8');
+    fs.writeFileSync(filePath, stringify({ order, date: new Date().getTime() } as any), 'utf-8');
 
     return id;
 }
@@ -24,7 +24,7 @@ export const getProductOrder = (id: string) => {
     const filePath = path.join(PRODUCTORDERS_FOLDER, id + ".toml");
     try {
         const data = fs.readFileSync(filePath, 'utf-8');
-        return parse(data).order;
+        return parse(data);
     } catch (e) {
         return null;
     }

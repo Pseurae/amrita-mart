@@ -9,7 +9,7 @@ type MultiExtraDetails = {
     _specId: string
 };
 
-type FoodCategories = 'veg' | 'non-veg' | 'refreshment' | 'snack';
+type FoodCategories = 'veg' | 'non-veg' | 'beverage' | 'snack';
 type ArticleCategories = 'stationary' | 'hygiene';
 
 type Details<Type, Categories> = ({
@@ -31,6 +31,6 @@ type Product = {
     Details<'article', ArticleCategories>
 );
 
-export const imagePath = (i: string) => ('images/products/' + i);
+export const imagePath = (i: string) => `/images/products/${i}`;
 
 export type { FoodCategories, ArticleCategories, Product };

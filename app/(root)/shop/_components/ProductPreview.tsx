@@ -4,15 +4,25 @@ import { useUser } from '../../../_context/user';
 import { Product as ProductType, imagePath } from '../../../_types/product'
 import { InputHTMLAttributes, useState } from 'react'
 import { getCategoryName } from '../_lib/common';
+import { motion } from "framer-motion";
+import Image from 'next/image';
 
 const VariantButton = ({ variant, ...props }: { variant: any } & Omit<InputHTMLAttributes<HTMLInputElement>, 'className' | 'type'>) => (
     <label
         className={'cursor-pointer flex gap-2 px-4 py-2 rounded-full border text-gray-500 border-gray-500 transition has-[:checked]:text-red-400 has-[:checked]:bg-red-50 has-[:checked]:border-red-400'}>
         <input className='hidden' type="radio" {...props} />
-        <img className='h-6 w-6 object-cover rounded-full' src={imagePath(variant.image)} alt={variant.image} />
+        <div className="h-6 w-6 relative">
+            <Image fill className='h-full w-full object-cover rounded-full' src={imagePath(variant.image)} alt={variant.image} />
+        </div>
         <h1>{variant.name}</h1>
     </label>
 );
+
+const PopupAnimationVariants = {
+    hidden: { y: '50%', opacity: 0 },
+    visible: { y: '0%', opacity: 1 },
+    exit: { y: '50%', opacity: 0 }
+};
 
 const ProductPreview = ({ product }: { product: ProductType }) => {
     const { addToCart, checkQuantity } = useUser();
@@ -34,10 +44,12 @@ const ProductPreview = ({ product }: { product: ProductType }) => {
     const variantId = (product._hasVariants ? product.variants[selVariant!]._specId : null);
 
     return (
-        <div className="bg-gradient-to-b rounded-3xl shadow-lg from-pink-400 to-rose-400">
+        <motion.div className="bg-gradient-to-b rounded-3xl shadow-lg from-pink-400 to-rose-400"
+            variants={PopupAnimationVariants} initial="hidden" animate="visible" exit="exit" transition={{ ease: 'easeInOut' }}
+        >
             <div className='m-2 flex flex-col bg-slate-100 p-12 rounded-2xl gap-2'>
-                <div className="w-96 h-96 rounded-xl bg-white overflow-hidden shadow-xl mb-2">
-                    <img className='h-full w-full object-contain' src={imagePath(previewImage)} alt="" />
+                <div className="w-96 h-96 rounded-xl bg-white overflow-hidden shadow-xl mb-2 relative">
+                    <Image fill className='h-full w-full object-contain' src={imagePath(previewImage)} alt="" />
                 </div>
 
                 <div>
@@ -62,7 +74,7 @@ const ProductPreview = ({ product }: { product: ProductType }) => {
                     Add to Cart! ({checkQuantity(product._id, variantId)})
                 </button>
             </div>
-        </div>
+        </motion.div>
     )
 };
 

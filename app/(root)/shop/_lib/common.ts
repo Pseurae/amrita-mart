@@ -21,8 +21,8 @@ export const getCategoryName = (category: FoodCategories | ArticleCategories) =>
         case 'veg':
         case 'non-veg':
             return "Food";
-        case 'refreshment':
-            return "Refreshment"
+        case 'beverage':
+            return "Beverage"
         case 'snack':
             return "Snacks"
         case 'stationary':

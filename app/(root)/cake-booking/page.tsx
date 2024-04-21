@@ -5,7 +5,7 @@ export const metadata: Metadata = {
     title: "AmritaMart - Cake Booking",
 };
 
-export default function () {
+export default function CakeBooking() {
     return (
         <Page />
     )

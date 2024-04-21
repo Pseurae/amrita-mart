@@ -1,6 +1,6 @@
 name="Maaza"
 image="maaza.jpg"
 type="food"
-category="refreshment"
+category="beverage"
 stock=5
 price=25

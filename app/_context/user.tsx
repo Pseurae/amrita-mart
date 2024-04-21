@@ -3,7 +3,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { CartItem } from "../_types/cartitem";
 import { User } from "../_types/user";
-import { act } from "react-dom/test-utils";
 
 export enum LocalCartTransfer {
     REPLACE,
@@ -15,6 +14,8 @@ type UserContextType = {
     user: User | null;
     login: (user: User, rememberMe: boolean) => void;
     logout: () => void;
+
+    loadedUser: boolean;
     hasLoggedIn: boolean;
 
     setCartLoadAction: (action: LocalCartTransfer) => void;
@@ -71,7 +72,7 @@ export const UserProvider = ({
 
     useEffect(() => {
         if (loadedCart) localStorage.setItem('localCartItems', JSON.stringify(localCart));
-    }, [localCart]);
+    }, [localCart, loadedCart]);
 
 
     useEffect(() => {
@@ -92,7 +93,7 @@ export const UserProvider = ({
                 });
             }
         }
-    }, [user]);
+    }, [user, loadedUser]);
 
     const setCartItems = (items: CartItem[]) => {
         if (user == null) setLocalCart(items);
@@ -196,6 +197,7 @@ export const UserProvider = ({
             user,
             login,
             logout,
+            loadedUser,
             hasLoggedIn: user != null,
             isCartOpen: cartOpen,
             setCartOpen: (open) => setCartOpen(open),

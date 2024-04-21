@@ -1,6 +1,6 @@
 name="Appy Fizz"
 image="appy-fizz.jpg"
 type="food"
-category="refreshment"
+category="beverage"
 stock=5
 price=35
