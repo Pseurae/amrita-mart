@@ -1,7 +1,7 @@
 "use client"
 
 import { useUser } from '../../../_context/user';
-import { Product as ProductType, imagePath } from '../../../_types/product'
+import { Product as ProductType, imagePath } from '../../../../types/product'
 import { InputHTMLAttributes, useState } from 'react'
 import { getCategoryName } from '../_lib/common';
 import { motion } from "framer-motion";
@@ -37,7 +37,7 @@ const ProductPreview = ({ product }: { product: ProductType }) => {
     }
 
     const addItemToCart = () => {
-        addToCart({ itemId: product._id, itemVariant: variantId, quantity: 1 });
+        addToCart(product._id, variantId,1);
     }
 
     const previewImage = product._hasVariants ? product.variants[selVariant!].image : product.image;

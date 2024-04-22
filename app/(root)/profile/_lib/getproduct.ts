@@ -1,8 +1,8 @@
 import useSWR from "swr";
 
-import { User } from "../../../_types/user";
-import { CartItem } from "../../../_types/cartitem";
-import { Product as ProductType } from "../../../_types/product";
+import { User } from "@/types/user";
+import { CartItem } from "@/types/cartitem";
+import { Product as ProductType } from "@/types/product";
 
 export interface ProductProps {
     name: string;

@@ -1,9 +1,9 @@
 "use client"
 
 import { HTMLAttributes } from 'react';
-import { Product as ProductType, imagePath } from '../../../_types/product'
+import { Product as ProductType, imagePath } from '../../../../types/product'
 import { getPreviewPrice } from '../_lib/common';
-import PlaceholderBar from '../../_components/PlaceholderBar';
+import PlaceholderBar from "@/components/PlaceholderBar";
 import Image from 'next/image';
 
 export const Product = ({ product, ...props }: { product: ProductType } & Omit<HTMLAttributes<HTMLDivElement>, 'className'>) => {

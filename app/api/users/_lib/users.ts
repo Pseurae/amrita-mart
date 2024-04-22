@@ -2,7 +2,7 @@ import path from "path";
 import fs from 'fs';
 import { parse, stringify } from '@iarna/toml';
 import { randomUUID, publicDecrypt, publicEncrypt, createCipheriv } from "crypto";
-import { LoginStatus, RegisterStatus, User, UserRegister } from "../../../_types/user";
+import { LoginStatus, RegisterStatus, User, UserRegister } from "@/types/user";
 import { env } from "process";
 
 export const USERS_FOLDER = path.join(process.cwd(), "users");

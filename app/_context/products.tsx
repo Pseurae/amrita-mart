@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { Product as ProductType } from '../_types/product'
+import { Product as ProductType } from '../../types/product'
 import useSWR from "swr";
 
 type ProductContextType = {

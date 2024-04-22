@@ -1,7 +1,7 @@
 import path from "path";
 import fs from 'fs';
 import { parse, stringify } from '@iarna/toml';
-import { Product as ProductType } from "@/app/_types/product";
+import { Product as ProductType } from "@/types/product";
 
 export const PRODUCTS_FOLDER = path.join(process.cwd(), "products");
 

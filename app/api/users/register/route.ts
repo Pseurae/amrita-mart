@@ -1,4 +1,4 @@
-import { UserRegister } from "@/app/_types/user";
+import { UserRegister } from "@/types/user";
 import { NextRequest, NextResponse } from "next/server";
 import { registerUser } from "../_lib/users";
 

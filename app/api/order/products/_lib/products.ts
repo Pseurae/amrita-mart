@@ -2,7 +2,7 @@ import path from "path";
 import fs from 'fs';
 import { parse, stringify } from '@iarna/toml';
 import { randomUUID } from "crypto";
-import { CartItem } from "../../../../_types/cartitem";
+import { CartItem } from "@/types/cartitem";
 
 export const PRODUCTORDERS_FOLDER = path.join(process.cwd(), "orders", "products");
 

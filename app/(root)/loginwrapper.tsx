@@ -2,8 +2,8 @@
 
 import { FormEvent, InputHTMLAttributes, useState } from "react";
 import { useUser } from "../_context/user"
-import { LoginStatus, RegisterStatus } from "../_types/user";
-import Modal from "./_components/Modal";
+import { LoginStatus, RegisterStatus } from "@/types/user";
+import { Modal } from "@/components/Modal";
 
 import "@fortawesome/fontawesome-svg-core/styles.css"
 import { config } from "@fortawesome/fontawesome-svg-core";

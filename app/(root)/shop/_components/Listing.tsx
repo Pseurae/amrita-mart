@@ -1,7 +1,7 @@
 "use client"
 
 import { ReactNode } from "react";
-import { Product as ProductType } from "../../../_types/product";
+import { Product as ProductType } from "@/types/product";
 
 export const Listing = ({ products, callback }: Readonly<{
     products: ProductType[]

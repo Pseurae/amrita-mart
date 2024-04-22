@@ -1,8 +1,8 @@
 "use client"
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { CartItem } from "../_types/cartitem";
-import { User } from "../_types/user";
+import { CartItem } from "@/types/cartitem";
+import { User } from "@/types/user";
 
 export enum LocalCartTransfer {
     REPLACE,
@@ -28,9 +28,8 @@ type UserContextType = {
 
     cartLoaded: boolean;
     getCartItems: () => CartItem[];
-    addToCart: (item: CartItem) => void;
-    removeFromCart: (itemId: string, itemVariant: string | null) => void;
-    removeItemsFromCart: (itemId: string, itemVariant: string | null) => void;
+    addToCart: (itemId: string, itemVariant: string | null, quantity: number) => void;
+    removeFromCart: (itemId: string, itemVariant: string | null, stack: boolean) => void;
 
     clearCart: () => void;
     getCartItemCount: () => number;
@@ -110,29 +109,29 @@ export const UserProvider = ({
         setUser((user) => ({ ...user!, cakeOrders: [...user!.cakeOrders, id] }))
     }
 
-    const addToCart = (item: CartItem) => {
+    const addToCart = (itemId: string, itemVariant: string | null, quantity: number) => {
         const cartItems = getCartItems();
-        const isItemInCart = cartItems.find((cartItem) => (cartItem.itemId == item.itemId && cartItem.itemVariant == item.itemVariant));
+        const isItemInCart = cartItems.find((cartItem) => (cartItem.itemId == itemId && cartItem.itemVariant == itemVariant));
 
         if (isItemInCart) {
             setCartItems(
                 cartItems.map((cartItem) => (
-                    cartItem.itemId == item.itemId && cartItem.itemVariant == item.itemVariant ?
-                        { ...cartItem, quantity: cartItem.quantity + item.quantity } : cartItem
+                    cartItem.itemId == itemId && cartItem.itemVariant == itemVariant ?
+                        { ...cartItem, quantity: cartItem.quantity + quantity } : cartItem
                 ))
             );
         } else {
-            setCartItems([...cartItems, item]);
+            setCartItems([...cartItems, { itemId, itemVariant, quantity }]);
         }
     };
 
-    const removeFromCart = (itemId: string, itemVariant: string | null = null) => {
+    const removeFromCart = (itemId: string, itemVariant: string | null = null, stack: boolean = false) => {
         const cartItems = getCartItems();
 
         const isItemInCart = cartItems.find((item) => (item.itemId == itemId && item.itemVariant == itemVariant));
         if (isItemInCart === undefined) return;
 
-        if (isItemInCart.quantity == 1) {
+        if (isItemInCart.quantity == 1 || stack) {
             setCartItems(cartItems.filter((item) => item.itemId != itemId || item.itemVariant != itemVariant));
         } else {
             setCartItems(
@@ -142,13 +141,6 @@ export const UserProvider = ({
                 ))
             );
         }
-    };
-
-    const removeItemsFromCart = (itemId: string, itemVariant: string | null = null) => {
-        const cartItems = getCartItems();
-        const isItemInCart = cartItems.find((item) => (item.itemId == itemId && item.itemVariant == itemVariant));
-        if (isItemInCart === undefined) return;
-        setCartItems(cartItems.filter((item) => item.itemId != itemId || item.itemVariant != itemVariant));
     };
 
     const clearCart = () => {
@@ -208,7 +200,6 @@ export const UserProvider = ({
             getCartItems,
             addToCart,
             removeFromCart,
-            removeItemsFromCart,
             clearCart,
             getCartItemCount,
             checkQuantity,

@@ -4,7 +4,7 @@ import { useUser } from "../../_context/user";
 import { FormEvent, useEffect, useState } from "react";
 import { cakes } from "../../_lib/cakes";
 import CakeButton from "./_components/CakeButton";
-import Modal from '../_components/Modal'
+import { Modal } from "@/components/Modal";
 
 import "@fortawesome/fontawesome-svg-core/styles.css"
 import { config } from "@fortawesome/fontawesome-svg-core";

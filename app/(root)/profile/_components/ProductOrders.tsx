@@ -1,10 +1,10 @@
 "use client"
 
 import useSWR from "swr";
-import Modal from "../../_components/Modal";
+import { Modal } from "@/components/Modal";
 import { ButtonHTMLAttributes, useState } from "react";
 import { ProductOrderPreview } from "./ProductOrderPreview";
-import PlaceholderBar from "../../_components/PlaceholderBar";
+import PlaceholderBar from "@/components/PlaceholderBar";
 
 const ProductOrder = ({ order, ...props }: { order: string } & ButtonHTMLAttributes<HTMLButtonElement>) => {
     const { data, isLoading } = useSWR(`/api/order/products?id=${order}`, (s: string) => fetch(s).then(res => res.json()));

@@ -1,9 +1,9 @@
 "use client"
 
-import { CartItem } from "../../../_types/cartitem";
+import { CartItem } from "@/types/cartitem";
 import useSWR from "swr";
 import { formatDate } from "../_lib/getproduct";
-import { imagePath } from "../../../_types/product";
+import { imagePath } from "@/types/product";
 
 import "@fortawesome/fontawesome-svg-core/styles.css"
 import { config } from "@fortawesome/fontawesome-svg-core";

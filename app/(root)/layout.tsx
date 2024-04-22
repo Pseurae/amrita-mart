@@ -1,5 +1,5 @@
 import Navbar from './_components/Navbar'
-import Cart from './_components/Cart';
+import Cart from './_components/Cart/Cart';
 import LoginWrapper from "./loginwrapper"
 import { UserProvider } from '../_context/user';
 

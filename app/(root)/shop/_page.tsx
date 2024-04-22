@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from 'react';
-import { Product as ProductType, FoodCategories, ArticleCategories, imagePath } from '../../_types/product'
+import { Product as ProductType, FoodCategories, ArticleCategories, imagePath } from '../../../types/product'
 import { useProducts } from '../../_context/products';
-import Modal from '../_components/Modal';
+import { Modal } from "@/components/Modal";
 import { Product, Placeholder } from './_components/Product'
 import ProductPreview from './_components/ProductPreview'
 import { Listing } from './_components/Listing';

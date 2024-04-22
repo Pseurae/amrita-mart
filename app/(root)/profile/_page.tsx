@@ -8,7 +8,7 @@ config.autoAddCss = false;
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faUser, faSpinner } from '@fortawesome/free-solid-svg-icons'
-import { User } from '../../_types/user';
+import { User } from '../../../types/user';
 
 import ProductOrders from './_components/ProductOrders';
 import CakeOrders from './_components/CakeOrders';

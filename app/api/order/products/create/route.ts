@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createNewProductOrder } from "../_lib/products";
-import { CartItem } from "@/app/_types/cartitem";
+import { CartItem } from "@/types/cartitem";
 
 export const dynamic = 'force-dynamic'
 
