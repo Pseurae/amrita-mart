@@ -2,31 +2,30 @@
 
 import { CartItem } from "@/types/cartitem";
 import useSWR from "swr";
-import { formatDate } from "../_lib/getproduct";
-import { imagePath } from "@/types/product";
 
 import "@fortawesome/fontawesome-svg-core/styles.css"
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faImage, faSpinner } from '@fortawesome/free-solid-svg-icons'
-import { useProducts } from "@/app/_context/products";
+import { faImage } from '@fortawesome/free-solid-svg-icons'
+import { useProducts } from "@/context/products";
 
 import Image from "next/image";
 import { OrderPreview } from "./OrderPreview";
+import { ProductImage } from "@/libs/products";
 
 const OrderDetails = ({ cartItem }: { cartItem: CartItem }) => {
     const { products } = useProducts();
 
     const getProductDetails = (cartItem: CartItem) => {
-        const product = products.find((product) => product._id == cartItem.itemId);
+        const product = products.find((product) => product._id == cartItem.id);
         if (product == undefined) return null;
 
-        if (product._hasVariants != (cartItem.itemVariant != null)) return null;
+        if (product._hasVariants != (cartItem.variant != null)) return null;
 
         if (product._hasVariants) {
-            const variant = product.variants.find((variant) => variant._specId == cartItem.itemVariant);
+            const variant = product.variants.find((variant) => variant._specId == cartItem.variant);
             if (variant == undefined) return null;
 
             return {
@@ -49,7 +48,7 @@ const OrderDetails = ({ cartItem }: { cartItem: CartItem }) => {
     if (product == null) return (
         <tr className="*:px-5 *:py-2 *:border">
             <td colSpan={5}>
-                <h1 className="w-full text-center text-md font-semibold">{`Cannot retrieve '${cartItem.itemId}'.`}</h1>
+                <h1 className="w-full text-center text-md font-semibold">{`Cannot retrieve '${cartItem.id}'.`}</h1>
             </td>
         </tr>
     );
@@ -58,7 +57,7 @@ const OrderDetails = ({ cartItem }: { cartItem: CartItem }) => {
         <tr key={product?.name + (product?.variantName ? ` - ${product?.variantName}` : '')} className="*:px-5 *:py-2 *:border">
             <td>
                 <div className="w-8 h-8 relative">
-                    <Image fill className="h-full w-full object-contain object-center" src={imagePath(product?.image!)} alt={product?.image!} />
+                    <Image fill className="h-full w-full object-contain object-center" src={ProductImage(product?.image!)} alt={product?.image!} />
                 </div>
             </td>
 
@@ -88,13 +87,13 @@ export const ProductOrderPreview = ({ order }: { order: string }) => {
     if (isLoading) return null;
 
     const getProductPrice = (cartItem: CartItem) => {
-        const product = products.find((product) => product._id == cartItem.itemId);
+        const product = products.find((product) => product._id == cartItem.id);
         if (product == undefined) return 0;
 
-        if (product._hasVariants != (cartItem.itemVariant != null)) return 0;
+        if (product._hasVariants != (cartItem.variant != null)) return 0;
 
         if (product._hasVariants) {
-            const variant = product.variants.find((variant) => variant._specId == cartItem.itemVariant);
+            const variant = product.variants.find((variant) => variant._specId == cartItem.variant);
             if (variant == undefined) return 0;
             return variant.price;
         }
@@ -119,7 +118,7 @@ export const ProductOrderPreview = ({ order }: { order: string }) => {
                     </thead>
 
                     <tbody>
-                        {data.order.map((item: CartItem) => <OrderDetails key={`itemId: ${item.itemId} itemVariant: ${item.itemVariant}`} cartItem={item} />)}
+                        {data.order.map((item: CartItem) => <OrderDetails key={`itemId: ${item.id} itemVariant: ${item.variant}`} cartItem={item} />)}
                     </tbody>
 
                     <tfoot>

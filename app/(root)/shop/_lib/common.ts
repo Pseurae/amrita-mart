@@ -1,4 +1,4 @@
-import { ArticleCategories, FoodCategories, Product as ProductType } from '../../../../types/product'
+import { ArticleCategories, FoodCategories, Product as ProductType } from '@/types/product'
 
 export const getPreviewPrice = (product: ProductType) => {
     if (product._hasVariants) {

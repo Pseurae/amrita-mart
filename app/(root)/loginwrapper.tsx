@@ -1,7 +1,7 @@
 "use client"
 
 import { FormEvent, InputHTMLAttributes, useState } from "react";
-import { useUser } from "../_context/user"
+import { useUserContext } from "@/context/user"
 import { LoginStatus, RegisterStatus } from "@/types/user";
 import { Modal } from "@/components/Modal";
 
@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 import { motion } from "framer-motion";
+import { PopupAnimationVariants } from "@/libs/common";
 
 enum UsernameErrors {
     Empty,
@@ -106,7 +107,7 @@ const Password = ({ error = null, errorMessages = [], ...props }: Omit<InputProp
 };
 
 const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
-    const { setShowLoginModal, login } = useUser();
+    const { setShowLoginModal, login } = useUserContext();
 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<LoginErrors>({
@@ -188,7 +189,7 @@ const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
 }
 
 const Register = ({ changeToLogin }: { changeToLogin: () => void }) => {
-    const { setShowLoginModal, login } = useUser();
+    const { setShowLoginModal, login } = useUserContext();
 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<RegisterErrors>({
@@ -282,18 +283,12 @@ const Register = ({ changeToLogin }: { changeToLogin: () => void }) => {
     )
 }
 
-const PopupAnimationVariants = {
-    hidden: { y: '50%', opacity: 0 },
-    visible: { y: '0%', opacity: 1 },
-    exit: { y: '50%', opacity: 0 }
-};
-
 export default function LoginWrapper({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const { showLoginModal, setShowLoginModal } = useUser();
+    const { showLoginModal, setShowLoginModal } = useUserContext();
     const [register, setRegister] = useState(false);
 
     return (

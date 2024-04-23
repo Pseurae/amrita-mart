@@ -1,7 +1,6 @@
-export type CartItemInfo = {
-    id: string;
-    variantId: string | null;
-    quantity: number,
+import { CartItem } from "@/types/cartitem";
+
+export type CartItemInfo = CartItem & {
     name: string;
     variantName: string | null;
     price: number;

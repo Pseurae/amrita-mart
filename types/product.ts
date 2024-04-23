@@ -9,6 +9,10 @@ type MultiExtraDetails = {
     _specId: string
 };
 
+type Variant<Categories> = CommonDetails & MultiExtraDetails & {
+    category: Categories;
+}
+
 type FoodCategories = 'veg' | 'non-veg' | 'beverage' | 'snack';
 type ArticleCategories = 'stationary' | 'hygiene';
 
@@ -20,7 +24,7 @@ type Details<Type, Categories> = ({
     _hasVariants: true;
     type: Type,
     defaultVariant: number;
-    variants: (CommonDetails & MultiExtraDetails & { category: Categories })[];
+    variants: Variant<Categories>[];
 };
 
 type Product = {
@@ -30,7 +34,5 @@ type Product = {
     Details<'food', FoodCategories> |
     Details<'article', ArticleCategories>
 );
-
-export const imagePath = (i: string) => `/images/products/${i}`;
 
 export type { FoodCategories, ArticleCategories, Product };

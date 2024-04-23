@@ -1,11 +1,5 @@
 import { motion } from "framer-motion";
-import { formatDate } from "../_lib/getproduct";
-
-const PopupAnimationVariants = {
-    hidden: { y: '50%', opacity: 0 },
-    visible: { y: '0%', opacity: 1 },
-    exit: { y: '50%', opacity: 0 }
-};
+import { PopupAnimationVariants, formatDate } from "@/libs/common";
 
 export function OrderPreview({ children, title, orderId, date } : { children: React.ReactNode, title: string, orderId: string, date: number }) {
     return (

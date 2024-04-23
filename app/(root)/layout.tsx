@@ -1,7 +1,7 @@
 import Navbar from './_components/Navbar'
 import Cart from './_components/Cart/Cart';
 import LoginWrapper from "./loginwrapper"
-import { UserProvider } from '../_context/user';
+import { UserProvider } from '@/context/user';
 
 export default function MainLayout({
     children,

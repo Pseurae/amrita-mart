@@ -1,6 +1,6 @@
 import { Inter, DM_Sans, DM_Serif_Display, Onest, Noto_Sans, Raleway, Figtree, Quattrocento, Montagu_Slab, Fraunces, DM_Mono, JetBrains_Mono, Playfair_Display_SC, Lexend, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { ProductProvider } from "./_context/products";
+import { ProductProvider } from "@/context/products";
 
 const inter = Inter({ display: "swap", subsets: ['latin'] });
 const figtree = Figtree({ display: "swap", subsets: ['latin'], variable: '--font-figtree' });

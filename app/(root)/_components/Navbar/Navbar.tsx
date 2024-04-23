@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { LocalCartTransfer, useUser } from "../../../_context/user";
+import { LocalCartTransfer, useUserContext } from "@/context/user";
 
 import "@fortawesome/fontawesome-svg-core/styles.css"
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -14,7 +14,7 @@ import PlaceholderBar from "@/components/PlaceholderBar";
 import ProfileDropdown from "./ProfileDropdown";
 
 export default function Navbar() {
-    const { setShowLoginModal, user, hasLoggedIn, setCartLoadAction, logout, cartLoaded, getCartItemCount, setCartOpen, loadedUser } = useUser();
+    const { setShowLoginModal, user, hasLoggedIn, setCartLoadAction, logout, cartLoaded, cart, setCartOpen, loadedUser } = useUserContext();
     const [showUserDropdown, setShowUserDropdown] = useState(false);
 
     const openLoginModal = () => {
@@ -32,7 +32,7 @@ export default function Navbar() {
 
                 <li>
                     <a className="py-2.5 px-3 text-lg rounded-lg cursor-pointer hover:bg-gray-100 block" onClick={() => setCartOpen(true)}>
-                        <FontAwesomeIcon className="mr-1" icon={faCartShopping} /> Cart {cartLoaded && <span>({getCartItemCount()})</span>}
+                        <FontAwesomeIcon className="mr-1" icon={faCartShopping} /> Cart {cartLoaded && <span>({cart.getItemCount()})</span>}
                     </a>
                 </li>
 

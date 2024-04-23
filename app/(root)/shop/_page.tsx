@@ -1,12 +1,12 @@
 "use client"
 
 import { useState } from 'react';
-import { Product as ProductType, FoodCategories, ArticleCategories, imagePath } from '../../../types/product'
-import { useProducts } from '../../_context/products';
+import { Product as ProductType } from '@/types/product'
+import { useProducts } from '@/context/products';
 import { Modal } from "@/components/Modal";
 import { Product, Placeholder } from './_components/Product'
 import ProductPreview from './_components/ProductPreview'
-import { Listing } from './_components/Listing';
+import Listing from './_components/Listing';
 
 interface ProductListProps { 
     products: ProductType[], 

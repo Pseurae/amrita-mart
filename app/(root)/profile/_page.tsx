@@ -1,6 +1,6 @@
 "use client"
 import './hook.css'
-import { useUser } from "../../_context/user";
+import { useUserContext } from "@/context/user";
 
 import "@fortawesome/fontawesome-svg-core/styles.css"
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -8,7 +8,7 @@ config.autoAddCss = false;
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faUser, faSpinner } from '@fortawesome/free-solid-svg-icons'
-import { User } from '../../../types/user';
+import { User } from '@/types/user';
 
 import ProductOrders from './_components/ProductOrders';
 import CakeOrders from './_components/CakeOrders';
@@ -36,7 +36,7 @@ const Sidebar = ({ user }: { user: User }) => (
 )
 
 export default function ProfilePage_() {
-    const { user, hasLoggedIn, loadedUser } = useUser();
+    const { user, hasLoggedIn, loadedUser } = useUserContext();
 
     return (hasLoggedIn ? (
         <div className="flex grow overflow-hidden">
