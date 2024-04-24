@@ -1,8 +1,7 @@
 import { InputHTMLAttributes } from "react";
-import { Cake } from "../../../_lib/cakes";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { CakeImage } from "@/libs/cakes";
+import { Cake, CakeImage } from "@/libs/cakes";
 
 interface CakeButtonProps {
     cake: Cake;

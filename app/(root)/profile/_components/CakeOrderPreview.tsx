@@ -1,9 +1,8 @@
 import useSWR from "swr";
-import { cakes } from "@/app/_lib/cakes";
-import { CakeOrder } from "@/app/api/order/cake/_lib/cakeorders";
+import { CakeOrder } from "@/app/api/order/libs/cakeorders";
 import Image from "next/image";
 import { OrderPreview } from "./OrderPreview";
-import { CakeImage } from "@/libs/cakes";
+import { cakes, CakeImage } from "@/libs/cakes";
 
 type OrderType = CakeOrder & { date: number };
 

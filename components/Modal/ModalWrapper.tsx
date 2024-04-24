@@ -18,6 +18,8 @@ export const ModalWrapper = ({ children, closeModal, parentStyles, overlayStyles
     }, []);
 
     useLayoutEffect(() => {
+        if (document.body.clientHeight == document.body.scrollHeight) return;
+
         setTimeout(() => document.body.classList.add('modal-open'));
         return () => document.body.classList.remove('modal-open');
      }, []);

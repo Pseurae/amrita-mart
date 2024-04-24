@@ -9,7 +9,6 @@ export default function ProfileDropdown ({ children, close }: ProfileDropdownPro
     const wrapperRef = useRef<HTMLDivElement>(null!);
 
     const onClick = useCallback((e: MouseEvent) => {
-        console.log("Test");
         if (!wrapperRef.current?.contains(e.target as Node)) { 
             close(); 
         }

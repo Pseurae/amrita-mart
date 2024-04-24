@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createNewProductOrder } from "../_lib/products";
-import { CartItem } from "@/types/cartitem";
+import {Products} from '@/libs/orders'
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
     const data = await request.json();
-    const id = createNewProductOrder(data);
+    const id = Products.placeOrder({ items: data });
     return NextResponse.json({ id });
 }

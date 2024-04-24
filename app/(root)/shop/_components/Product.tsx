@@ -2,10 +2,25 @@
 
 import { HTMLAttributes } from 'react';
 import { Product as ProductType } from '@/types/product'
-import { getPreviewPrice } from '../_lib/common';
 import PlaceholderBar from "@/components/PlaceholderBar";
 import Image from 'next/image';
 import { ProductImage } from '@/libs/products';
+
+const getPreviewPrice = (product: ProductType) => {
+    if (product._hasVariants) {
+        const sortedVariants = product.variants.toSorted((t1, t2) => { return t1.price - t2.price; });
+
+        const first = sortedVariants.at(0)!;
+        const last = sortedVariants.at(-1)!;
+
+        if (first.price == last.price)
+            return '₹' + last.price;
+
+        return '₹' + first.price + ' - ' + '₹' + last.price;
+    }
+
+    return '₹' + product.price;
+};
 
 export const Product = ({ product, ...props }: { product: ProductType } & Omit<HTMLAttributes<HTMLDivElement>, 'className'>) => {
     const previewImage = product._hasVariants ? product.variants[product.defaultVariant].image : product.image;

@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getProductDetails, getProductFiles } from "./_lib/products"
+import { getProductDetails, getProductFiles } from "./libs/products"
 
 export const dynamic = 'force-dynamic'
 

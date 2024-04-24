@@ -1,4 +1,4 @@
-import { getProductFiles } from "../_lib/products"
+import { getProductFiles } from "../libs/products"
 
 export const dynamic = 'force-dynamic'
 

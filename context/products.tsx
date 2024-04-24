@@ -12,7 +12,7 @@ type ProductContextType = {
 
 const ProductContext = createContext<ProductContextType>(null!);
 
-export const useProducts = () => useContext(ProductContext);
+export const useProductsContext = () => useContext(ProductContext);
 
 export const ProductProvider = ({
     children,

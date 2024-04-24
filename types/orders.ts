@@ -4,7 +4,7 @@ interface BaseOrder {
     date: number;
 };
 
-export type CakeOrder = BaseOrder & {
+export interface CakeOrder {
     type: string;
     message: string;
     quantity: number;
@@ -12,4 +12,8 @@ export type CakeOrder = BaseOrder & {
     other_request: string;
 };
 
-export type ProductOrder = BaseOrder & CartItem;
+export interface ProductOrder {
+    items: CartItem[];
+};
+
+export type WithDate<T> = T & BaseOrder;

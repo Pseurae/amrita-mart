@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CartItem as CartItemType } from "@/types/cartitem"
-import { useProducts } from "@/context/products";
+import { useProductsContext } from "@/context/products";
 import { LocalCartTransfer, useUserContext } from "@/context/user";
 import { Modal } from "@/components/Modal";
 
@@ -16,6 +16,7 @@ import { faX, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { motion, AnimatePresence } from "framer-motion";
 import { CartItem, PlaceholderCartItem } from "./CartItem";
 import { CartItemInfo } from "./cartiteminfo";
+import { Product as ProductType } from "@/types/product";
 
 const CartAnimationVariants = {
     hidden: { x: '100%' },
@@ -23,48 +24,44 @@ const CartAnimationVariants = {
     exit: { x: '100%' }
 };
 
+const getProductDetails = (products: ProductType[], cartItem: CartItemType): CartItemInfo | null => {
+    const product = products.find((product) => product._id == cartItem.id);
+    if (product == undefined) return null;
+
+    if (product._hasVariants != (cartItem.variant != null)) return null;
+
+    if (product._hasVariants) {
+        const variant = product.variants.find((variant) => variant._specId == cartItem.variant);
+        if (variant == undefined) return null;
+
+        return {
+            ...cartItem,
+            name: product.name,
+            variantName: variant.name,
+            price: variant.price,
+            image: variant.image
+        };
+    }
+
+    return {
+        ...cartItem,
+        name: product.name,
+        variantName: null,
+        price: product.price,
+        image: product.image
+    };
+}
+
 export default function Cart() {
     const { setCartLoadAction, setShowLoginModal, hasLoggedIn, getCartItems, isCartOpen, setCartOpen, cart, addProductOrder } = useUserContext();
-    const { products, loading, error } = useProducts();
+    const { products, loading, error } = useProductsContext();
 
     const [checkingOut, setCheckingOut] = useState(false);
 
     const cartItems = getCartItems();
 
-    const getProductDetails = (cartItem: CartItemType): CartItemInfo | null => {
-        const product = products.find((product) => product._id == cartItem.id);
-        if (product == undefined) return null;
-
-        if (product._hasVariants != (cartItem.variant != null)) return null;
-
-        if (product._hasVariants) {
-            const variant = product.variants.find((variant) => variant._specId == cartItem.variant);
-            if (variant == undefined) return null;
-
-            return {
-                id: cartItem.id,
-                variant: cartItem.variant,
-                quantity: cartItem.quantity,
-                name: product.name,
-                variantName: variant.name,
-                price: variant.price,
-                image: variant.image
-            };
-        }
-
-        return {
-            id: cartItem.id,
-            variant: cartItem.variant,
-            quantity: cartItem.quantity,
-            name: product.name,
-            variantName: null,
-            price: product.price,
-            image: product.image
-        };
-    }
-
     const totalPrice = () => cartItems.reduce((total, cartItem) => {
-        const product = getProductDetails(cartItem);
+        const product = getProductDetails(products, cartItem);
         if (product == null) return total;
 
         return total + product.price * cartItem.quantity;
@@ -135,7 +132,7 @@ export default function Cart() {
                                     <motion.ul animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ ease: "easeInOut", duration: 0.5 }} key="itemList" className="grow px-8 hide-scrollbar h-full overflow-auto">
                                         <AnimatePresence initial={false} mode="popLayout">
                                             {cartItems.map((cartItem: CartItemType) => {
-                                                const itemInfo = getProductDetails(cartItem);
+                                                const itemInfo = getProductDetails(products, cartItem);
 
                                                 if (itemInfo == null)
                                                     return null;

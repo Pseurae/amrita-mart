@@ -1,43 +1,41 @@
 "use client"
 
 import { useUserContext } from '@/context/user';
-import { Product as ProductType } from '@/types/product'
-import { InputHTMLAttributes, useState } from 'react'
-import { getCategoryName } from '../_lib/common';
+import { ArticleCategories, FoodCategories, Product as ProductType } from '@/types/product'
+import { useState } from 'react'
 import { motion } from "framer-motion";
 import Image from 'next/image';
 import { PopupAnimationVariants } from '@/libs/common';
 import { ProductImage } from '@/libs/products';
+import VariantButton from './VariantButton';
 
-const VariantButton = ({ variant, ...props }: { variant: any } & Omit<InputHTMLAttributes<HTMLInputElement>, 'className' | 'type'>) => (
-    <label
-        className={'cursor-pointer flex gap-2 px-4 py-2 rounded-full border text-gray-500 border-gray-500 transition has-[:checked]:text-red-400 has-[:checked]:bg-red-50 has-[:checked]:border-red-400'}>
-        <input className='hidden' type="radio" {...props} />
-        <div className="h-6 w-6 relative">
-            <Image fill className='h-full w-full object-cover rounded-full' src={ProductImage(variant.image)} alt={variant.image} />
-        </div>
-        <h1>{variant.name}</h1>
-    </label>
-);
+const getCategoryName = (category: FoodCategories | ArticleCategories) => {
+    switch (category) {
+        case 'veg':
+        case 'non-veg':
+            return "Food";
+        case 'beverage':
+            return "Beverage"
+        case 'snack':
+            return "Snacks"
+        case 'stationary':
+            return "Stationary"
+        case 'hygiene':
+            return "Hygiene";
+    }
+};
 
 const ProductPreview = ({ product }: { product: ProductType }) => {
     const { cart } = useUserContext();
     const [selVariant, setSelVariant] = useState<number | null>(product._hasVariants ? product.defaultVariant : null);
 
-    const getCategory = () => {
-        if (!product._hasVariants) {
-            return product.category;
-        }
-
-        return product.variants[selVariant!].category;
-    }
-
     const addItemToCart = () => {
         cart.addItem(product._id, variantId, 1);
     }
 
+    const category = product._hasVariants ? product.variants[selVariant!].category : product.category;
     const previewImage = product._hasVariants ? product.variants[selVariant!].image : product.image;
-    const variantId = (product._hasVariants ? product.variants[selVariant!]._specId : null);
+    const variantId = product._hasVariants ? product.variants[selVariant!]._specId : null;
 
     return (
         <motion.div className="bg-gradient-to-b rounded-3xl shadow-lg from-pink-400 to-rose-400"
@@ -49,7 +47,7 @@ const ProductPreview = ({ product }: { product: ProductType }) => {
                 </div>
 
                 <div>
-                    <h2 className='font-semibold text-red-400'>{getCategoryName(getCategory())}</h2>
+                    <h2 className='font-semibold text-red-400'>{getCategoryName(category)}</h2>
                     <h1 className='font-serif font-bold text-2xl'>{product.name}</h1>
                 </div>
 

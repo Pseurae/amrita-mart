@@ -1,3 +1,4 @@
 [] Clean up /api/
 [] Use token auth for login
 [] Keep user details and order data seperate 
+[] Remove usage of ProductsContext

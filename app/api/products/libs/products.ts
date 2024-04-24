@@ -1,25 +1,29 @@
 import path from "path";
 import fs from 'fs';
-import { parse, stringify } from '@iarna/toml';
+import { parse } from '@iarna/toml';
 import { Product as ProductType } from "@/types/product";
 
 export const PRODUCTS_FOLDER = path.join(process.cwd(), "products");
+
+const getFilePath = (id: string) => {
+    const hasExt = id.endsWith('.toml');
+    const fileName = hasExt ? id : id + '.toml';
+    if (hasExt) id = id.substring(0, id.length - 5);
+
+    return path.join(PRODUCTS_FOLDER, fileName);
+}
 
 export const getProductFiles = () => {
     const files = fs.readdirSync(PRODUCTS_FOLDER);
     return files;
 }
 
-export const getProductDetails = (id: string) : ProductType | null => {
-    const hasExt = id.endsWith('.toml');
-    const fileName = hasExt ? id : id + '.toml';
-    if (hasExt) id = id.substring(0, id.length - 5);
-
-    const filePath = path.join(PRODUCTS_FOLDER, fileName);
+export const getProductDetails = (id: string) : ProductType | undefined => {
+    const filePath = getFilePath(id);
 
     try {
         const tomlData = fs.readFileSync(filePath, 'utf8');
-        let json = parse(tomlData);
+        const json = parse(tomlData);
 
         const hasVariants = "variants" in json;
 
@@ -30,16 +34,11 @@ export const getProductDetails = (id: string) : ProductType | null => {
                 return { _specId: k, ...((variants as any)[k] as object) }
             });
 
-            json = {...json, variants: mappedVariants };
+            return { ...json, _id: id, _hasVariants: hasVariants, variants: mappedVariants } as ProductType;
         }
 
         return { ...json, _id: id, _hasVariants: hasVariants } as ProductType;
     } catch (err) {
-        return null;
+        return undefined;
     }
-}
-
-export const createProductRecord = (details: ProductType) => {
-    const filePath = path.join(PRODUCTS_FOLDER, details._id + '.toml');
-    fs.writeFileSync(filePath, stringify(details));
 }

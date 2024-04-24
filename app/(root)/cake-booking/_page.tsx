@@ -2,7 +2,7 @@
 
 import { useUserContext } from "@/context/user";
 import { FormEvent, MouseEvent, useEffect, useState } from "react";
-import { cakes } from "../../_lib/cakes";
+import { cakes } from "@/libs/cakes";
 import CakeButton from "./_components/CakeButton";
 import { Modal } from "@/components/Modal";
 

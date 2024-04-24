@@ -9,14 +9,14 @@ config.autoAddCss = false;
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faImage } from '@fortawesome/free-solid-svg-icons'
-import { useProducts } from "@/context/products";
+import { useProductsContext } from "@/context/products";
 
 import Image from "next/image";
 import { OrderPreview } from "./OrderPreview";
 import { ProductImage } from "@/libs/products";
 
 const OrderDetails = ({ cartItem }: { cartItem: CartItem }) => {
-    const { products } = useProducts();
+    const { products } = useProductsContext();
 
     const getProductDetails = (cartItem: CartItem) => {
         const product = products.find((product) => product._id == cartItem.id);
@@ -82,7 +82,7 @@ const OrderDetails = ({ cartItem }: { cartItem: CartItem }) => {
 
 export const ProductOrderPreview = ({ order }: { order: string }) => {
     const { data, isLoading } = useSWR(`/api/order/products?id=${order}`, (s: string) => fetch(s).then(res => res.json()));
-    const { products } = useProducts();
+    const { products } = useProductsContext();
 
     if (isLoading) return null;
 
@@ -118,7 +118,7 @@ export const ProductOrderPreview = ({ order }: { order: string }) => {
                     </thead>
 
                     <tbody>
-                        {data.order.map((item: CartItem) => <OrderDetails key={`itemId: ${item.id} itemVariant: ${item.variant}`} cartItem={item} />)}
+                        {data.items.map((item: CartItem) => <OrderDetails key={`itemId: ${item.id} itemVariant: ${item.variant}`} cartItem={item} />)}
                     </tbody>
 
                     <tfoot>
@@ -128,7 +128,7 @@ export const ProductOrderPreview = ({ order }: { order: string }) => {
                             <th />
                             <th />
                             <th>
-                                <h1 className="font-bold">₹{data.order.reduce((total: number, item: CartItem) => (total + (getProductPrice(item) * item.quantity)), 0)}</h1>
+                                <h1 className="font-bold">₹{data.items.reduce((total: number, item: CartItem) => (total + (getProductPrice(item) * item.quantity)), 0)}</h1>
                             </th>
                         </tr>
                     </tfoot>
