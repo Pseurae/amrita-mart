@@ -1,5 +1,3 @@
-import React from "react";
-
 import { AnimatePresence } from "framer-motion";
 import { ModalWrapper } from './ModalWrapper'
 import { ModalProps } from "./modalprops";

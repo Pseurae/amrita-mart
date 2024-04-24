@@ -18,6 +18,11 @@ export const ModalWrapper = ({ children, closeModal, parentStyles, overlayStyles
     }, []);
 
     useLayoutEffect(() => {
+        setTimeout(() => document.body.classList.add('modal-open'));
+        return () => document.body.classList.remove('modal-open');
+     }, []);
+
+    useLayoutEffect(() => {
         setTimeout(() => window.addEventListener('keydown', listener));
         return () => window.removeEventListener('keydown', listener);
     }, []);
