@@ -2,7 +2,7 @@
 
 import { FormEvent, InputHTMLAttributes, useState } from "react";
 import { useUserContext } from "@/context/user"
-import { LoginStatus, RegisterStatus } from "@/types/user";
+import { LoginStatus, RegisterStatus } from "@/types/user-auth";
 import { Modal } from "@/components/Modal";
 
 import "@fortawesome/fontawesome-svg-core/styles.css"
@@ -107,7 +107,7 @@ const Password = ({ error = null, errorMessages = [], ...props }: Omit<InputProp
 };
 
 const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
-    const { setShowLoginModal, login } = useUserContext();
+    const { setShowLoginModal, setUserToken } = useUserContext();
 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<LoginErrors>({
@@ -147,12 +147,13 @@ const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
             const payload = validateForm(formdata);
 
             const params = new URLSearchParams(payload);
-            const response = await fetch('/api/users/login/?' + params)
+            const response = await fetch('/api/auth/login/?' + params)
                 .then(res => res.json());
-
+            
             switch (response.status as LoginStatus) {
                 case LoginStatus.SUCCESS:
-                    login(response.user, false);
+                    setUserToken(response.token);
+                    // login(response.user, false);
                     setShowLoginModal(false);
                     break;
                 case LoginStatus.USERNAME_INVALID:
@@ -189,7 +190,7 @@ const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
 }
 
 const Register = ({ changeToLogin }: { changeToLogin: () => void }) => {
-    const { setShowLoginModal, login } = useUserContext();
+    const { setShowLoginModal, setUserToken } = useUserContext();
 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<RegisterErrors>({
@@ -241,15 +242,15 @@ const Register = ({ changeToLogin }: { changeToLogin: () => void }) => {
 
             const payload = validateForm(formdata);
 
-            const response = await fetch('/api/users/register/', {
+            const response = await fetch('/api/auth/register/', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            })
-                .then(res => res.json());
+            }).then(res => res.json());
 
             switch (response.status as RegisterStatus) {
                 case RegisterStatus.SUCCESS:
-                    login(response.user, false);
+                    setUserToken(response.token);
+                    // login(response.user, false);
                     setShowLoginModal(false);
                     break;
                 case RegisterStatus.USERNAME_EXISTS:

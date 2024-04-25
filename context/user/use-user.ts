@@ -1,126 +1,166 @@
 "use client"
 
 import { CartItem } from "@/types/cartitem";
-import { User } from "@/types/user";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Cart } from "./cart";
+import useSWR from "swr";
+import { UserDetails } from "@/types/user-auth";
+import { Session } from "@/types/session";
 
-export enum LocalCartTransfer {
-    REPLACE,
-    APPEND,
-    SKIP
-};
+// const useLocalCart = (): [CartItem[], Dispatch<SetStateAction<CartItem[]>>, boolean] => {
+//     const [cart, setCart] = useState<CartItem[]>([]);
+//     const [loadedCart, setLoadedCart] = useState(false);
 
-export const useUser = () => {
-    const [user, setUser] = useState<User | null>(null);
-    const [loadedUser, setLoadedUser] = useState(false);
+//     const {data: fetchedCart, isLoading: loadingCart} = useSWR('/api/localcart/load/', (s: string) => fetch(s).then(res => res.json()));
 
-    const [localCart, setLocalCart] = useState<CartItem[]>([]);
+//     useEffect(() => {
+//         if (fetchedCart) setCart(fetchedCart);
+//         setLoadedCart(true);
+//     }, [fetchedCart]);
+
+//     useEffect(() => {
+//         if (!loadedCart) return;
+
+//         fetch('/api/localcart/save/', {
+//             method: 'POST',
+//             body: JSON.stringify(cart),
+//         })
+//     }, [cart]);
+
+//     return [cart, setCart, loadedCart];
+// };
+
+const useLocalCart = (): [CartItem[], Dispatch<SetStateAction<CartItem[]>>, boolean] => {
+    const [cart, setCart] = useState<CartItem[]>([]);
     const [loadedCart, setLoadedCart] = useState(false);
 
-    const rememberMe = useRef(false);
-    const [cartOpen, setCartOpen] = useState(false);
-
-    const [showLoginModal, setShowLoginModal] = useState(false);
-
-    const cartLoadAction = useRef(LocalCartTransfer.SKIP);
-
-    // 
-    const getCartItems = () => user ? user.currentCart : localCart;
-    const setCartItems = (value: CartItem[]) => {
-        if (user == null) setLocalCart(value);
-        else setUser((user) => ({ ...user!, currentCart: value }));
-    }
-
-    // 
     useEffect(() => {
         const data = localStorage.getItem('localCartItems');
-        if (data) setLocalCart(JSON.parse(data));
+        if (data) setCart(JSON.parse(data));
         setLoadedCart(true);
     }, []);
 
     useEffect(() => {
-        if (loadedCart) localStorage.setItem('localCartItems', JSON.stringify(localCart));
-    }, [localCart, loadedCart]);
+        if (loadedCart) localStorage.setItem('localCartItems', JSON.stringify(cart));
+    }, [cart]);
 
+    return [cart, setCart, loadedCart];
+};
+
+const useUserDetails = (token: string): [UserDetails | undefined, boolean] => {
+    const [details, setDetails] = useState<UserDetails | undefined>(undefined!);
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        const data = sessionStorage.getItem('userSession');
-        if (data) setUser(JSON.parse(data));
-        setLoadedUser(true);
+        fetch('/api/auth/details', { headers: { token } }).then(res => res.json()).then(data => {
+            setDetails(data);
+            setLoaded(true);
+        }).catch((error) => {
+            setLoaded(true);
+        });
+    }, [token]);
+
+    return [details, loaded];
+};
+
+const useUserToken = (): [string, Dispatch<SetStateAction<string>>, boolean] => {
+    const [token, setToken] = useState<string>("");
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+        const data = localStorage.getItem('userToken');
+        if (data) setToken(data);
+        setLoaded(true);
     }, []);
 
     useEffect(() => {
-        if (loadedUser)
-        {
-            sessionStorage.setItem('userSession', JSON.stringify(user));
-            
-            if (user != null) {
-                fetch('/api/users/update', {
-                    method: 'POST',
-                    body: JSON.stringify(user)
-                });
-            }
-        }
-    }, [user, loadedUser]);
+        if (loaded) localStorage.setItem('userToken', token);
+    }, [token]);
+
+    return [token, setToken, loaded];
+}
+
+const useUserSession = (token: string): [Session, Dispatch<SetStateAction<Session>>, boolean] => {
+    const [session, setSession] = useState<Session>({
+        cakeOrders: [],
+        currentCart: [],
+        productOrders: []
+    });
+
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+        fetch('/api/session/load', { headers: { token } }).then(res => {
+            if (!res.ok) throw new Error();
+            return res.json();
+        }).then(data => {
+            setSession(data);
+            setLoaded((f) => true);
+        }).catch((error) => {
+            setLoaded((f) => true);
+        });
+    }, [token]);
+
+    useEffect(() => {
+        if (!loaded) return;
+
+        fetch('/api/session/save/', {
+            method: 'POST',
+            headers: { token },
+            body: JSON.stringify(session),
+        })
+    }, [session]);
+
+    return [session, setSession, loaded]
+}
+
+export const useUser = () => {
+    const [userToken, setUserToken, tokenLoaded] = useUserToken();
+    const [localCart, setLocalCart, loadedLocalCart] = useLocalCart();
+    const [cartOpen, setCartOpen] = useState(false);
+    const [session, setSession, loadedSession] = useUserSession(userToken);
+
+    const loggedIn = userToken != "";
+
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
     // 
+    const getCartItems = () => loggedIn ? session.currentCart : localCart;
+    const setCartItems = (value: CartItem[]) => {
+        if (!loggedIn) setLocalCart(value);
+        else setSession({ ...session, currentCart: value });
+    }
+
+    //
+    const [userDetails, loadedUserDetails] = useUserDetails(userToken);
+
+    // 
+    const cart: Cart = new Cart(getCartItems(), setCartItems);
+
     const addProductOrder = (id: string) => {
-        if (user == null) throw new Error("User not logged in!");
-        setUser((user) => ({ ...user!, productOrders: [...user!.productOrders, id] }));
+        setSession((session) => ({ ...session!, productOrders: [...session!.productOrders, id] }));
     }
 
     const addCakeOrder = (id: string) => {
-        if (user == null) throw new Error("User not logged in!");
-        setUser((user) => ({ ...user!, cakeOrders: [...user!.cakeOrders, id] }))
+        setSession((session) => ({ ...session!, cakeOrders: [...session!.cakeOrders, id] }));
     }
-
-    const login = (user: User, rememberMe: boolean) => {
-        const localCart_: CartItem[] = loadedCart ? localCart : (JSON.parse(localStorage.getItem('localCartItems')!) || []);
-
-        // setRememberMe(rememberMe);
-        if (localCart_.length == 0) {
-            setUser(user);
-            return;
-        }
-
-        switch (cartLoadAction.current) {
-            case LocalCartTransfer.REPLACE:
-                setUser({ ...user, currentCart: localCart_ });
-                break;
-            case LocalCartTransfer.APPEND:
-                setUser({ ...user, currentCart: user.currentCart.concat(localCart_) })
-                break;
-            case LocalCartTransfer.SKIP:
-                setUser(user);
-                break;
-        }
-
-        setLocalCart([]);
-    };
-
-    const logout = () => {
-        setUser(null);
-    }
-
-    const cart: Cart = new Cart(getCartItems(), setCartItems);
 
     return {
-        user,
-        login,
-        logout,
-        loadedUser,
-        hasLoggedIn: user != null,
+        userToken,
+        setUserToken,
         isCartOpen: cartOpen,
-        setCartOpen: (open: boolean) => setCartOpen(open),
-        cartLoaded: loadedCart,
-        showLoginModal, 
-        setCartLoadAction: (action: LocalCartTransfer) => { cartLoadAction.current = action; },
-        setShowLoginModal,
-        getCartItems,
+        setCartOpen,
+        loadedCart: loggedIn ? loadedSession : loadedLocalCart,
         cart,
+        showLoginModal,
+        setShowLoginModal,
+        userDetails,
+        loadedUserDetails,
+        loggedIn,
+        tokenLoaded,
         addProductOrder,
-        addCakeOrder
+        addCakeOrder,
+        session
     };
 }
 

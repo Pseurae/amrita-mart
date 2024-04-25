@@ -15,7 +15,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import ConfirmBox from "./_components/ConfirmBox";
 
 export default function _CakeBooking() {
-    const { addCakeOrder, hasLoggedIn } = useUserContext();
+    const { addCakeOrder, loggedIn } = useUserContext();
     const [type, setType] = useState(0);
     const [message, setMessage] = useState("");
     const [quantity, setQuantity] = useState<number | null>(0.0);
@@ -59,11 +59,11 @@ export default function _CakeBooking() {
                 }),
             });
 
-            await response.json().then(data => addCakeOrder(data.id));
-
             if (!response.ok) {
                 throw new Error('Failed to submit the data. Please try again.')
             }
+
+            response.json().then(data => addCakeOrder(data.id));
         } catch (error) {
             setError((error as Error).message);
         } finally {
@@ -128,8 +128,8 @@ export default function _CakeBooking() {
 
                 <textarea placeholder="Other specific requests..." name="otherRequest" id="" cols={50} rows={10} className="outline-none border p-3 rounded resize-none focus:border-blue-400" value={otherRequest} onChange={(e) => setOtherRequest(e.target.value)}></textarea>
 
-                <button className="transition px-5 py-2 border-2 font-semibold rounded-full border-red-500 text-red-500 enabled:hover:text-white enabled:hover:text-white enabled:hover:bg-red-500 disabled:text-slate-400 disabled:border-slate-400 disabled:cursor-not-allowed" disabled={!hasLoggedIn || isLoading || (quantity == null && customQuantityError)} onClick={openConfirmBox}>
-                    {hasLoggedIn ? (isLoading ? (
+                <button className="transition px-5 py-2 border-2 font-semibold rounded-full border-red-500 text-red-500 enabled:hover:text-white enabled:hover:text-white enabled:hover:bg-red-500 disabled:text-slate-400 disabled:border-slate-400 disabled:cursor-not-allowed" disabled={!loggedIn || isLoading || (quantity == null && customQuantityError)} onClick={openConfirmBox}>
+                    {loggedIn ? (isLoading ? (
                         <>
                             <FontAwesomeIcon className="animate-spin" icon={faSpinner} />   Submitting...
                         </>

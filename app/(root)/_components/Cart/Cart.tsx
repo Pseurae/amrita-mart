@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { CartItem as CartItemType } from "@/types/cartitem"
 import { useProductsContext } from "@/context/products";
-import { LocalCartTransfer, useUserContext } from "@/context/user";
+import { useUserContext } from "@/context/user";
 import { Modal } from "@/components/Modal";
 
 import "@fortawesome/fontawesome-svg-core/styles.css"
@@ -53,12 +53,12 @@ const getProductDetails = (products: ProductType[], cartItem: CartItemType): Car
 }
 
 export default function Cart() {
-    const { setCartLoadAction, setShowLoginModal, hasLoggedIn, getCartItems, isCartOpen, setCartOpen, cart, addProductOrder } = useUserContext();
+    const { isCartOpen, setCartOpen, cart, addProductOrder, setShowLoginModal, tokenLoaded } = useUserContext();
     const { products, loading, error } = useProductsContext();
 
     const [checkingOut, setCheckingOut] = useState(false);
 
-    const cartItems = getCartItems();
+    const cartItems = cart.items;
 
     const totalPrice = () => cartItems.reduce((total, cartItem) => {
         const product = getProductDetails(products, cartItem);
@@ -76,11 +76,11 @@ export default function Cart() {
                 body: JSON.stringify(cartItems)
             });
 
-            await response.json().then(data => addProductOrder(data.id));
-
             if (!response.ok) {
                 throw new Error('Failed to submit the data. Please try again.')
             }
+
+            response.json().then(data => addProductOrder(data.id));
         } catch (error) {
         } finally {
             setCheckingOut(false);
@@ -89,9 +89,8 @@ export default function Cart() {
     }
 
     const tryCheckout = () => {
-        if (hasLoggedIn) { checkout(); }
-        else {
-            setCartLoadAction(LocalCartTransfer.REPLACE);
+        if (tokenLoaded) { checkout(); }
+        else { 
             setShowLoginModal(true);
             setCartOpen(false);
         }

@@ -4,13 +4,13 @@ import { parse, stringify } from '@iarna/toml';
 import { randomUUID } from "crypto";
 import { WithDate } from "@/types/orders";
 
-const OrdersPath = path.join(process.cwd(), "orders");
+const ORDERS_DIR = path.join(process.cwd(), "data", "orders");
 
 export class OrderPlacer<OrderType> {
     readonly ordersPath: string;
 
     constructor(orderFolder: string) {
-        this.ordersPath = path.join(OrdersPath, orderFolder);
+        this.ordersPath = path.join(ORDERS_DIR, orderFolder);
     }
 
     public placeOrder(order: OrderType): string | undefined {
@@ -30,7 +30,7 @@ export class OrderPlacer<OrderType> {
         const filePath = path.join(this.ordersPath, id + ".toml");
         try {
             const data = fs.readFileSync(filePath, 'utf-8');
-            return parse(data) as any;
+            return parse(data) as WithDate<OrderType>;
         } catch (e) {
             return undefined;
         }
