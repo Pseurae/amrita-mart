@@ -22,20 +22,44 @@ export const useUser = () => {
     const [showLoginModal, setShowLoginModal] = useState(false);
 
     // 
-    const getCartItems = () => loggedIn ? session.currentCart : localCart;
+    const cartItems = loggedIn ? session.currentCart : localCart;
     const setCartItems = (value: CartItem[]) => {
         loggedIn ? setSession({ ...session, currentCart: value }) : setLocalCart(value);
     }
 
     // 
-    const cart: Cart = new Cart(getCartItems(), setCartItems);
+    const cart: Cart = new Cart(cartItems, setCartItems);
     const sessionControl: Session = new Session(session, setSession);
+
+    //
+    const login = (token: string) => {
+        if (loggedIn) {
+            fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: { token: userToken }
+            });
+        }
+
+        setUserToken(token);
+    }
+
+    const logout = () => {
+        if (!loggedIn) return;
+
+        fetch('/api/auth/logout', {
+            method: 'POST',
+            headers: { token: userToken }
+        });
+
+        setUserToken('');
+    };
 
     return {
         userToken,
-        setUserToken,
         loadedToken,
         loggedIn,
+        login,
+        logout,
 
         isCartOpen: cartOpen,
         setCartOpen,

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic'
 
-export function GET(request: NextRequest) {
+export function POST(request: NextRequest) {
     const token = request.headers.get("token");
 
     if (!token) return NextResponse.json({}, { status: 404 });

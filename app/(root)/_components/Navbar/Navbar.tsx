@@ -14,7 +14,7 @@ import PlaceholderBar from "@/components/PlaceholderBar";
 import ProfileDropdown from "./ProfileDropdown";
 
 export default function Navbar() {
-    const { loadedCart, cart, setCartOpen, loadedDetails, userDetails, loadedToken, loggedIn, setShowLoginModal } = useUserContext();
+    const { loadedCart, cart, setCartOpen, loadedDetails, userDetails, loadedToken, loggedIn, setShowLoginModal, logout } = useUserContext();
     const [showUserDropdown, setShowUserDropdown] = useState(false);
 
     const openLoginModal = () => {
@@ -47,7 +47,7 @@ export default function Navbar() {
                                     <ProfileDropdown key="profileDropdown" close={() => setShowUserDropdown(false)}>
                                         <p className="px-5 py-2 w-full text-nowrap">Logged in: <span className="font-medium">{userDetails!.username}</span></p>
                                         <Link href="/profile" className="block w-full px-5 py-2 hover:bg-gray-200" onClick={() => setShowUserDropdown(false)}><FontAwesomeIcon className="mr-1" icon={faUser} /> Profile</Link>
-                                        <a className="block w-full px-5 py-2 hover:bg-gray-200 cursor-pointer" onClick={() => {setShowUserDropdown(false);}}><FontAwesomeIcon className="mr-1" icon={faRightFromBracket} /> Logout</a>
+                                        <a className="block w-full px-5 py-2 hover:bg-gray-200 cursor-pointer" onClick={() => {logout(); setShowUserDropdown(false);}}><FontAwesomeIcon className="mr-1" icon={faRightFromBracket} /> Logout</a>
                                     </ProfileDropdown>
                                 )}
                             </>

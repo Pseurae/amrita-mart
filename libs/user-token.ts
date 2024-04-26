@@ -52,3 +52,26 @@ export function invalidateToken(token: string) {
         return newTokens;
     });
 }
+
+export function checkForUserToken(username: string) : string | undefined {
+    const tokens: UserTokens = loadValidTokens();
+
+    for (const [token, tokenData] of Object.entries(tokens)) {
+        if (tokenData.username == username) return token;
+    }
+
+    return undefined;
+}
+
+export function tryCreateToken(username: string, dataId: string) : string {
+    const tokens = loadValidTokens();
+
+    for (const [token, tokenData] of Object.entries(tokens)) {
+        if (tokenData.username == username) return token;
+    }
+
+    const token = randomUUID();
+    writeTokens({ ...tokens, [token]: ({ username, dataId }) });
+
+    return token; 
+}

@@ -5,7 +5,7 @@ import { createCipheriv, randomUUID } from "crypto";
 import { User } from "@/types/user-auth";
 import { LoginStatus, RegisterStatus } from '@/types/user-auth'
 import { env } from "process";
-import { createToken } from "@/libs/user-token";
+import { tryCreateToken } from "@/libs/user-token";
 
 export const USERS_FOLDER = path.join(process.cwd(), "data", "users");
 
@@ -34,7 +34,7 @@ export const registerUser = (username: string, fullname: string, email: string, 
     };
 
     fs.writeFileSync(filePath, stringify(user as any), 'utf-8');
-    const token = createToken(user.username, user.dataId);
+    const token = tryCreateToken(user.username, user.dataId);
     return { status: RegisterStatus.SUCCESS, token };
 }
 
@@ -54,7 +54,7 @@ export const loginUser = (username: string, password: string) => {
     if (user.username != username) return { status: LoginStatus.USERNAME_INVALID }; // Filenames aren't case sensitive
     if (user.passwordHash != encryptPassword(password)) return { status: LoginStatus.PASSWORD_INVALID };
 
-    const token = createToken(user.username, user.dataId);
+    const token = tryCreateToken(user.username, user.dataId);
 
     return { status: LoginStatus.SUCCESS, token };
 };

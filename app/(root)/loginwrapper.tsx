@@ -107,7 +107,7 @@ const Password = ({ error = null, errorMessages = [], ...props }: Omit<InputProp
 };
 
 const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
-    const { setShowLoginModal, setUserToken } = useUserContext();
+    const { setShowLoginModal, login } = useUserContext();
 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<LoginErrors>({
@@ -152,8 +152,7 @@ const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
             
             switch (response.status as LoginStatus) {
                 case LoginStatus.SUCCESS:
-                    setUserToken(response.token);
-                    // login(response.user, false);
+                    login(response.token);
                     setShowLoginModal(false);
                     break;
                 case LoginStatus.USERNAME_INVALID:
@@ -190,7 +189,7 @@ const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
 }
 
 const Register = ({ changeToLogin }: { changeToLogin: () => void }) => {
-    const { setShowLoginModal, setUserToken } = useUserContext();
+    const { setShowLoginModal, login } = useUserContext();
 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<RegisterErrors>({
@@ -249,8 +248,7 @@ const Register = ({ changeToLogin }: { changeToLogin: () => void }) => {
 
             switch (response.status as RegisterStatus) {
                 case RegisterStatus.SUCCESS:
-                    setUserToken(response.token);
-                    // login(response.user, false);
+                    login(response.token);
                     setShowLoginModal(false);
                     break;
                 case RegisterStatus.USERNAME_EXISTS:
