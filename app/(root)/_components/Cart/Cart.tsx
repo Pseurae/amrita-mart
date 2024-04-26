@@ -53,7 +53,7 @@ const getProductDetails = (products: ProductType[], cartItem: CartItemType): Car
 }
 
 export default function Cart() {
-    const { isCartOpen, setCartOpen, cart, addProductOrder, setShowLoginModal, loadedToken } = useUserContext();
+    const { isCartOpen, setCartOpen, cart, session, setShowLoginModal, loadedToken } = useUserContext();
     const { products, loading, error } = useProductsContext();
 
     const [checkingOut, setCheckingOut] = useState(false);
@@ -80,7 +80,7 @@ export default function Cart() {
                 throw new Error('Failed to submit the data. Please try again.')
             }
 
-            response.json().then(data => addProductOrder(data.id));
+            response.json().then(data => session.addProductOrder(data.id));
         } catch (error) {
         } finally {
             setCheckingOut(false);

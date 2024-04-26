@@ -15,7 +15,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import ConfirmBox from "./_components/ConfirmBox";
 
 export default function _CakeBooking() {
-    const { addCakeOrder, loggedIn } = useUserContext();
+    const { session, loggedIn } = useUserContext();
     const [type, setType] = useState(0);
     const [message, setMessage] = useState("");
     const [quantity, setQuantity] = useState<number | null>(0.0);
@@ -56,14 +56,14 @@ export default function _CakeBooking() {
                     quantity: quantity || customQuantity,
                     need_candle: candlesRequest,
                     other_request: otherRequest
-                }),
+                })
             });
 
             if (!response.ok) {
                 throw new Error('Failed to submit the data. Please try again.')
             }
 
-            response.json().then(data => addCakeOrder(data.id));
+            response.json().then(data => session.addCakeOrder(data.id));
         } catch (error) {
             setError((error as Error).message);
         } finally {

@@ -14,6 +14,8 @@ import CakeOrders from './_components/CakeOrders';
 
 const Sidebar = () => {
     const { userDetails, session } = useUserContext();
+    const productOrders = session.getProductOrders(),
+        cakeOrders = session.getCakeOrders();
 
     return (
         <div className="px-10 py-10 w-96 h-full flex flex-col bg-slate-50">
@@ -26,12 +28,12 @@ const Sidebar = () => {
             <h1 className="text-md text-center"><FontAwesomeIcon icon={faEnvelope} /> {userDetails?.email}</h1>
 
             <div className='mt-auto mb-4'>
-                <h1 className='text-center font-bold font-serif text-2xl'>{session?.productOrders.length}</h1>
+                <h1 className='text-center font-bold font-serif text-2xl'>{productOrders.length}</h1>
                 <h2 className='text-center opacity-80 text-lg font-semibold'>Products</h2>
             </div>
 
             <div>
-                <h1 className='text-center font-bold font-serif text-2xl'>{session?.cakeOrders.length}</h1>
+                <h1 className='text-center font-bold font-serif text-2xl'>{cakeOrders.length}</h1>
                 <h2 className='text-center opacity-80 text-lg font-semibold'>Cakes</h2>
             </div>
         </div>
@@ -40,26 +42,28 @@ const Sidebar = () => {
 
 export default function ProfilePage_() {
     const { session, loggedIn, loadedToken } = useUserContext();
+    const productOrders = session.getProductOrders(),
+        cakeOrders = session.getCakeOrders();
 
     return (loggedIn ? (
         <div className="flex grow overflow-hidden">
             <Sidebar />
             <main className="px-10 py-10 w-full overflow-auto flex flex-col gap-10">
-                {session?.productOrders.length != 0 && (
+                {productOrders.length != 0 && (
                     <div>
                         <h1 className="font-serif text-3xl font-semibold mb-5">Product Orders: </h1>
-                        <ProductOrders orders={session?.productOrders!} />
+                        <ProductOrders orders={productOrders} />
                     </div>
                 )}
 
-                {session?.cakeOrders.length != 0 && (
+                {cakeOrders.length != 0 && (
                     <div>
                         <h1 className="font-serif text-3xl font-semibold mb-5">Cake Orders: </h1>
-                        <CakeOrders orders={session?.cakeOrders!} />
+                        <CakeOrders orders={cakeOrders} />
                     </div>
                 )}
 
-                {(session?.productOrders.length == 0 && session?.cakeOrders.length == 0) && (
+                {(productOrders.length == 0 && cakeOrders.length == 0) && (
                     <h1 className='font-serif text-2xl text-2xl'>No products have been placed!</h1>
                 )}
             </main>
