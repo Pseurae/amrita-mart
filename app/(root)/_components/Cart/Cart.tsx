@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { CartItem as CartItemType } from "@/types/cartitem"
-import { useProductsContext } from "@/context/products";
 import { useUserContext } from "@/context/user";
 import { Modal } from "@/components/Modal";
 
@@ -15,8 +14,7 @@ import { faX, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 import { motion, AnimatePresence } from "framer-motion";
 import { CartItem, PlaceholderCartItem } from "./CartItem";
-import { CartItemInfo } from "./cartiteminfo";
-import { Product as ProductType } from "@/types/product";
+import useCartItemInfo from "./use-cartiteminfo";
 
 const CartAnimationVariants = {
     hidden: { x: '100%' },
@@ -24,47 +22,20 @@ const CartAnimationVariants = {
     exit: { x: '100%' }
 };
 
-const getProductDetails = (products: ProductType[], cartItem: CartItemType): CartItemInfo | null => {
-    const product = products.find((product) => product._id == cartItem.id);
-    if (product == undefined) return null;
-
-    if (product._hasVariants != (cartItem.variant != null)) return null;
-
-    if (product._hasVariants) {
-        const variant = product.variants.find((variant) => variant._specId == cartItem.variant);
-        if (variant == undefined) return null;
-
-        return {
-            ...cartItem,
-            name: product.name,
-            variantName: variant.name,
-            price: variant.price,
-            image: variant.image
-        };
-    }
-
-    return {
-        ...cartItem,
-        name: product.name,
-        variantName: null,
-        price: product.price,
-        image: product.image
-    };
-}
-
 export default function Cart() {
     const { isCartOpen, setCartOpen, cart, session, setShowLoginModal, loadedToken } = useUserContext();
-    const { products, loading, error } = useProductsContext();
+    const [products, loaded] = useCartItemInfo(cart.items);
 
     const [checkingOut, setCheckingOut] = useState(false);
 
-    const cartItems = cart.items;
+    const getCartItemInfo = (id: string, variant: string | null) => {
+        return products.find((i) => i != undefined && i.id == id && i.variant == variant);
+    }
 
-    const totalPrice = () => cartItems.reduce((total, cartItem) => {
-        const product = getProductDetails(products, cartItem);
-        if (product == null) return total;
-
-        return total + product.price * cartItem.quantity;
+    const totalPrice = () => cart.items.reduce((total, item) => {
+        const product = getCartItemInfo(item.id, item.variant);
+        if (product == undefined) return total;
+        return total + product.price * item.quantity;
     }, 0);
 
     const checkout = async () => {
@@ -73,13 +44,10 @@ export default function Cart() {
         try {
             const response = await fetch("/api/order/products/create", {
                 method: 'POST',
-                body: JSON.stringify(cartItems)
+                body: JSON.stringify(cart.items)
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to submit the data. Please try again.')
-            }
-
+            if (!response.ok) throw new Error('Failed to submit the data. Please try again.');
             response.json().then(data => session.addProductOrder(data.id));
         } catch (error) {
         } finally {
@@ -90,7 +58,7 @@ export default function Cart() {
 
     const tryCheckout = () => {
         if (loadedToken) { checkout(); }
-        else { 
+        else {
             setShowLoginModal(true);
             setCartOpen(false);
         }
@@ -116,25 +84,23 @@ export default function Cart() {
 
 
                 <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-                    {cartItems.length == 0 ?
+                    {cart.items.length == 0 ?
                         <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="px-8 text-lg font-medium h-full grid place-content-center">No items are in the cart!</motion.h1> :
                         (() => {
-                            if (loading) return (
+                            if (!loaded) return (
                                 <ul className="grow px-8 hide-scrollbar h-full overflow-auto">
-                                    {Array(cartItems.length).fill(true).map((_, i) => <PlaceholderCartItem key={i} />)}
+                                    {Array(cart.items.length).fill(true).map((_, i) => <PlaceholderCartItem key={i} />)}
                                 </ul>
                             );
-                            if (error) return (<h1>Error loading products...</h1>);
+                            // if (error) return (<h1>Error loading products...</h1>);
 
                             return (
                                 [
                                     <motion.ul animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ ease: "easeInOut", duration: 0.5 }} key="itemList" className="grow px-8 hide-scrollbar h-full overflow-auto">
                                         <AnimatePresence initial={false} mode="popLayout">
-                                            {cartItems.map((cartItem: CartItemType) => {
-                                                const itemInfo = getProductDetails(products, cartItem);
-
-                                                if (itemInfo == null)
-                                                    return null;
+                                            {cart.items.map((item: CartItemType) => {
+                                                const itemInfo = getCartItemInfo(item.id, item.variant);
+                                                if (itemInfo == undefined) return null;
 
                                                 return (
                                                     <CartItem key={`itemId: ${itemInfo.id} itemVariant: ${itemInfo.variant}`} itemInfo={itemInfo} />

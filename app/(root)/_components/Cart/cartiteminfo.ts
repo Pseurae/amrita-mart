@@ -5,4 +5,4 @@ export type CartItemInfo = CartItem & {
     variantName: string | null;
     price: number;
     image: string;
-};
+} | undefined;
