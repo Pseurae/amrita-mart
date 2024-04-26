@@ -39,7 +39,7 @@ const Sidebar = () => {
 }
 
 export default function ProfilePage_() {
-    const { session, loggedIn, tokenLoaded } = useUserContext();
+    const { session, loggedIn, loadedToken } = useUserContext();
 
     return (loggedIn ? (
         <div className="flex grow overflow-hidden">
@@ -64,7 +64,7 @@ export default function ProfilePage_() {
                 )}
             </main>
         </div>
-    ) : (tokenLoaded ?
+    ) : (loadedToken ?
         (
             <div className="grid place-content-center py-10">
                 <h1 className="font-semibold text-xl">Please login to see your profile.</h1>

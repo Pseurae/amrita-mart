@@ -53,7 +53,7 @@ const getProductDetails = (products: ProductType[], cartItem: CartItemType): Car
 }
 
 export default function Cart() {
-    const { isCartOpen, setCartOpen, cart, addProductOrder, setShowLoginModal, tokenLoaded } = useUserContext();
+    const { isCartOpen, setCartOpen, cart, addProductOrder, setShowLoginModal, loadedToken } = useUserContext();
     const { products, loading, error } = useProductsContext();
 
     const [checkingOut, setCheckingOut] = useState(false);
@@ -89,7 +89,7 @@ export default function Cart() {
     }
 
     const tryCheckout = () => {
-        if (tokenLoaded) { checkout(); }
+        if (loadedToken) { checkout(); }
         else { 
             setShowLoginModal(true);
             setCartOpen(false);

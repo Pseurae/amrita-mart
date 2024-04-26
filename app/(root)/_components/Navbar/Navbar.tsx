@@ -14,7 +14,7 @@ import PlaceholderBar from "@/components/PlaceholderBar";
 import ProfileDropdown from "./ProfileDropdown";
 
 export default function Navbar() {
-    const { loadedCart, cart, setCartOpen, loadedUserDetails, userDetails, tokenLoaded, loggedIn, setShowLoginModal } = useUserContext();
+    const { loadedCart, cart, setCartOpen, loadedDetails, userDetails, loadedToken, loggedIn, setShowLoginModal } = useUserContext();
     const [showUserDropdown, setShowUserDropdown] = useState(false);
 
     const openLoginModal = () => {
@@ -36,11 +36,11 @@ export default function Navbar() {
                 </li>
 
                 <li className="relative">
-                    {tokenLoaded ? (
+                    {loadedToken ? (
                         loggedIn ? (
                             <>
                                 <a className="py-2.5 px-3 rounded-lg cursor-pointer block text-lg hover:bg-gray-100" onClick={() => setShowUserDropdown(val => !val)}>
-                                    <FontAwesomeIcon className="mr-1" icon={faUser} /> { loadedUserDetails ? userDetails!.fullname : <PlaceholderBar className="inline-block w-24" />} <FontAwesomeIcon className="ml-1" icon={faAngleDown} />
+                                    <FontAwesomeIcon className="mr-1" icon={faUser} /> { loadedDetails ? userDetails!.fullname : <PlaceholderBar className="inline-block w-24" />} <FontAwesomeIcon className="ml-1" icon={faAngleDown} />
                                 </a>
 
                                 {showUserDropdown && (

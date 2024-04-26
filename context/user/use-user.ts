@@ -1,7 +1,7 @@
 "use client"
 
 import { CartItem } from "@/types/cartitem";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Cart } from "./cart";
 import useSWR from "swr";
 import { UserDetails } from "@/types/user-auth";
@@ -47,15 +47,18 @@ const useLocalCart = (): [CartItem[], Dispatch<SetStateAction<CartItem[]>>, bool
     return [cart, setCart, loadedCart];
 };
 
-const useUserDetails = (token: string): [UserDetails | undefined, boolean] => {
+const useUserDetails = (token: string, loggedIn: boolean): [UserDetails | undefined, boolean] => {
     const [details, setDetails] = useState<UserDetails | undefined>(undefined!);
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
-        fetch('/api/auth/details', { headers: { token } }).then(res => res.json()).then(data => {
+        if (!loggedIn) return;
+
+        fetch('/api/auth/details', { headers: { token } }).then(res => {
+            if (!res.ok) return Promise.reject("Couldn't not retrieve user details.");
+            return res.json()
+        }).then(data => {
             setDetails(data);
-            setLoaded(true);
-        }).catch((error) => {
             setLoaded(true);
         });
     }, [token]);
@@ -67,20 +70,20 @@ const useUserToken = (): [string, Dispatch<SetStateAction<string>>, boolean] => 
     const [token, setToken] = useState<string>("");
     const [loaded, setLoaded] = useState(false);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const data = localStorage.getItem('userToken');
         if (data) setToken(data);
         setLoaded(true);
     }, []);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (loaded) localStorage.setItem('userToken', token);
     }, [token]);
 
     return [token, setToken, loaded];
 }
 
-const useUserSession = (token: string): [Session, Dispatch<SetStateAction<Session>>, boolean] => {
+const useUserSession = (token: string, loggedIn: boolean): [Session, Dispatch<SetStateAction<Session>>, boolean] => {
     const [session, setSession] = useState<Session>({
         cakeOrders: [],
         currentCart: [],
@@ -90,18 +93,19 @@ const useUserSession = (token: string): [Session, Dispatch<SetStateAction<Sessio
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
+        if (!loggedIn) return;
+
         fetch('/api/session/load', { headers: { token } }).then(res => {
-            if (!res.ok) throw new Error();
+            if (!res.ok) return Promise.reject("Could not retrieve session data.");
             return res.json();
         }).then(data => {
             setSession(data);
-            setLoaded((f) => true);
-        }).catch((error) => {
-            setLoaded((f) => true);
+            setLoaded(true);
         });
     }, [token]);
 
     useEffect(() => {
+        if (!loggedIn) return;
         if (!loaded) return;
 
         fetch('/api/session/save/', {
@@ -115,24 +119,25 @@ const useUserSession = (token: string): [Session, Dispatch<SetStateAction<Sessio
 }
 
 export const useUser = () => {
-    const [userToken, setUserToken, tokenLoaded] = useUserToken();
+    const [userToken, setUserToken, loadedToken] = useUserToken();
     const [localCart, setLocalCart, loadedLocalCart] = useLocalCart();
     const [cartOpen, setCartOpen] = useState(false);
-    const [session, setSession, loadedSession] = useUserSession(userToken);
 
     const loggedIn = userToken != "";
+
+    const [session, setSession, loadedSession] = useUserSession(userToken, loggedIn);
+
 
     const [showLoginModal, setShowLoginModal] = useState(false);
 
     // 
     const getCartItems = () => loggedIn ? session.currentCart : localCart;
     const setCartItems = (value: CartItem[]) => {
-        if (!loggedIn) setLocalCart(value);
-        else setSession({ ...session, currentCart: value });
+        loggedIn ? setSession({ ...session, currentCart: value }) : setLocalCart(value);
     }
 
     //
-    const [userDetails, loadedUserDetails] = useUserDetails(userToken);
+    const [userDetails, loadedDetails] = useUserDetails(userToken, loggedIn);
 
     // 
     const cart: Cart = new Cart(getCartItems(), setCartItems);
@@ -148,6 +153,7 @@ export const useUser = () => {
     return {
         userToken,
         setUserToken,
+        loggedIn,
         isCartOpen: cartOpen,
         setCartOpen,
         loadedCart: loggedIn ? loadedSession : loadedLocalCart,
@@ -155,9 +161,8 @@ export const useUser = () => {
         showLoginModal,
         setShowLoginModal,
         userDetails,
-        loadedUserDetails,
-        loggedIn,
-        tokenLoaded,
+        loadedDetails,
+        loadedToken,
         addProductOrder,
         addCakeOrder,
         session
