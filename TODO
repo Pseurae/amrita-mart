@@ -1,5 +1,0 @@
-[X] Clean up /api/
-[X] Use token auth for login
-[X] Keep user details and order data seperate 
-[] Remove usage of ProductsContext
-[X] Fix navbar flickering on load/reload

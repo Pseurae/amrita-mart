@@ -1,12 +1,10 @@
 import useSWR from "swr";
-import { CakeOrder } from "@/app/api/order/libs/cakeorders";
 import Image from "next/image";
 import { OrderPreview } from "./OrderPreview";
 import { cakes, CakeImage } from "@/libs/cakes";
+import { CakeOrder, WithDate } from "@/types/orders";
 
-type OrderType = CakeOrder & { date: number };
-
-const OrderDetails = ({ cakeOrder }: { cakeOrder: OrderType }) => {
+const OrderDetails = ({ cakeOrder }: { cakeOrder: WithDate<CakeOrder> }) => {
     const cake = cakes.find((c) => c._id == cakeOrder.type);
     if (!cake) return null;
 
@@ -44,7 +42,7 @@ const OrderDetails = ({ cakeOrder }: { cakeOrder: OrderType }) => {
 }
 
 export const CakeOrderPreview = ({ order }: { order: string }) => {
-    const { data, isLoading } = useSWR<OrderType>(`/api/order/cake?id=${order}`, (s: string) => fetch(s).then(res => res.json()));
+    const { data, isLoading } = useSWR(`/api/order/cake?id=${order}`, (s: string) => fetch(s).then(res => res.json()));
 
     if (isLoading) return null;
 
