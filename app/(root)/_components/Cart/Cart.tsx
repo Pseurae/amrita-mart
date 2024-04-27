@@ -14,7 +14,7 @@ import { faX, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 import { motion, AnimatePresence } from "framer-motion";
 import { CartItem, PlaceholderCartItem } from "./CartItem";
-import useCartItemInfo from "./use-cartiteminfo";
+import useCartItemInfo from "@/libs/use-cartiteminfo";
 
 const CartAnimationVariants = {
     hidden: { x: '100%' },

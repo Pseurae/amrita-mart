@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquarePlus, faSquareMinus, faTrash, faX, faSpinner } from '@fortawesome/free-solid-svg-icons'
-import { CartItemInfo } from "./cartiteminfo";
+import { CartItemInfo } from "@/types/cartiteminfo";
 import { useUserContext } from "@/context/user";
 
 import PlaceholderBar from "@/components/PlaceholderBar"
@@ -11,7 +11,7 @@ import { ProductImage } from "@/libs/products";
 import { MutableRefObject, forwardRef } from "react";
 
 interface CartItemProps {
-    itemInfo: CartItemInfo;
+    itemInfo: NonNullable<CartItemInfo>;
 };
 
 export function PlaceholderCartItem() {

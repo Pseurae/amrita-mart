@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { CartItem as CartItemType } from "@/types/cartitem"
 import { Product as ProductType } from "@/types/product";
-import { CartItemInfo } from "./cartiteminfo";
 
-export default function useCartItemInfo(cartItems: CartItemType[]): [CartItemInfo[], boolean] {
-    const [data, setData] = useState<CartItemInfo[]>([]);
+type OrderItemInfo = {
+
+} | undefined;
+
+export default function useCartItemInfo(cartItems: CartItemType[]): [OrderItemInfo[], boolean] {
+    const [data, setData] = useState<OrderItemInfo[]>([]);
     const [loaded, setLoaded] = useState(false);
 
     const fetchProducts = useCallback(async () => {
@@ -27,7 +30,7 @@ export default function useCartItemInfo(cartItems: CartItemType[]): [CartItemInf
     return [data, loaded]
 }
 
-const getProductDetails = (product: ProductType, cartItem: CartItemType): CartItemInfo => {
+const getProductDetails = (product: ProductType, cartItem: CartItemType): OrderItemInfo => {
     if (product._hasVariants != (cartItem.variant != null)) return undefined;
 
     if (product._hasVariants) {

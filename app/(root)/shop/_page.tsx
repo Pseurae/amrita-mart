@@ -2,17 +2,16 @@
 
 import { useState } from 'react';
 import { Product as ProductType } from '@/types/product'
-import { useProductsContext } from '@/context/products';
 import { Modal } from "@/components/Modal";
 import { ProductPreview } from './_components/ProductPreview'
 import { ProductList, PlaceholderList } from './_components/ProductList';
-
+import useSWR from 'swr';
 
 export default function ShopPage_() {
-    const [modalProduct, setModalProduct] = useState<ProductType | null>(null);
+    const [modalProduct, setModalProduct] = useState<ProductType | undefined>(undefined);
     const [searchPrompt, setSearchPrompt] = useState<string>("");
 
-    const { products, loading, error } = useProductsContext();
+    const {data: products, isLoading: loading, error} = useSWR('/api/products/', (v: string) => fetch(v).then(res => res.json()))
 
     return (
         <>
@@ -31,7 +30,7 @@ export default function ShopPage_() {
                 </div>
             </div>
 
-            <Modal isModalOpen={modalProduct != null} closeModal={() => setModalProduct(null)} parentStyles='grid place-content-center' overlayStyles="bg-black/[0.6] backdrop-blur-sm">
+            <Modal isModalOpen={modalProduct != undefined} closeModal={() => setModalProduct(undefined)} parentStyles='grid place-content-center' overlayStyles="bg-black/[0.6] backdrop-blur-sm">
                 <ProductPreview product={modalProduct!} />
             </Modal>
         </>
