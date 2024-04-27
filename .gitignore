@@ -36,5 +36,4 @@ yarn-error.log*
 next-env.d.ts
 
 # Storage
-/orders
-/users
+/data

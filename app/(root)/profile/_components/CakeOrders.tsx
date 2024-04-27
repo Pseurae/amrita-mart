@@ -3,8 +3,8 @@
 import { ButtonHTMLAttributes, useState } from "react";
 import useSWR from "swr";
 import { CakeOrderPreview } from "./CakeOrderPreview";
-import Modal from "../../_components/Modal";
-import PlaceholderBar from "../../_components/PlaceholderBar";
+import { Modal } from "@/components/Modal";
+import PlaceholderBar from "@/components/PlaceholderBar";
 
 const CakeOrder = ({ order, ...props }: { order: string } & ButtonHTMLAttributes<HTMLButtonElement>) => {
     const { data, isLoading } = useSWR(`/api/order/cake?id=${order}`, (s: string) => fetch(s).then(res => res.json()));

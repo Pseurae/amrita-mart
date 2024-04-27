@@ -1,9 +1,9 @@
 "use client"
 
 import { FormEvent, InputHTMLAttributes, useState } from "react";
-import { useUser } from "../_context/user"
-import { LoginStatus, RegisterStatus } from "../_types/user";
-import Modal from "./_components/Modal";
+import { useUserContext } from "@/context/user"
+import { LoginStatus, RegisterStatus } from "@/types/user-auth";
+import { Modal } from "@/components/Modal";
 
 import "@fortawesome/fontawesome-svg-core/styles.css"
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 import { motion } from "framer-motion";
+import { PopupAnimationVariants } from "@/libs/common";
 
 enum UsernameErrors {
     Empty,
@@ -106,7 +107,7 @@ const Password = ({ error = null, errorMessages = [], ...props }: Omit<InputProp
 };
 
 const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
-    const { setShowLoginModal, login } = useUser();
+    const { setShowLoginModal, login } = useUserContext();
 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<LoginErrors>({
@@ -146,12 +147,12 @@ const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
             const payload = validateForm(formdata);
 
             const params = new URLSearchParams(payload);
-            const response = await fetch('/api/users/login/?' + params)
+            const response = await fetch('/api/auth/login/?' + params)
                 .then(res => res.json());
-
+            
             switch (response.status as LoginStatus) {
                 case LoginStatus.SUCCESS:
-                    login(response.user, false);
+                    login(response.token);
                     setShowLoginModal(false);
                     break;
                 case LoginStatus.USERNAME_INVALID:
@@ -188,7 +189,7 @@ const Login = ({ changeToRegister }: { changeToRegister: () => void }) => {
 }
 
 const Register = ({ changeToLogin }: { changeToLogin: () => void }) => {
-    const { setShowLoginModal, login } = useUser();
+    const { setShowLoginModal, login } = useUserContext();
 
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<RegisterErrors>({
@@ -240,15 +241,14 @@ const Register = ({ changeToLogin }: { changeToLogin: () => void }) => {
 
             const payload = validateForm(formdata);
 
-            const response = await fetch('/api/users/register/', {
+            const response = await fetch('/api/auth/register/', {
                 method: 'POST',
                 body: JSON.stringify(payload)
-            })
-                .then(res => res.json());
+            }).then(res => res.json());
 
             switch (response.status as RegisterStatus) {
                 case RegisterStatus.SUCCESS:
-                    login(response.user, false);
+                    login(response.token);
                     setShowLoginModal(false);
                     break;
                 case RegisterStatus.USERNAME_EXISTS:
@@ -282,18 +282,12 @@ const Register = ({ changeToLogin }: { changeToLogin: () => void }) => {
     )
 }
 
-const PopupAnimationVariants = {
-    hidden: { y: '50%', opacity: 0 },
-    visible: { y: '0%', opacity: 1 },
-    exit: { y: '50%', opacity: 0 }
-};
-
 export default function LoginWrapper({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const { showLoginModal, setShowLoginModal } = useUser();
+    const { showLoginModal, setShowLoginModal } = useUserContext();
     const [register, setRegister] = useState(false);
 
     return (

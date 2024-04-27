@@ -1,22 +1,21 @@
 "use client"
 
-import { useUser } from "../../_context/user";
-import { FormEvent, useEffect, useState } from "react";
-import { cakes } from "../../_lib/cakes";
+import { useUserContext } from "@/context/user";
+import { FormEvent, MouseEvent, useEffect, useState } from "react";
+import { cakes } from "@/libs/cakes";
 import CakeButton from "./_components/CakeButton";
-import Modal from '../_components/Modal'
+import { Modal } from "@/components/Modal";
 
 import "@fortawesome/fontawesome-svg-core/styles.css"
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
-
-import { motion } from "framer-motion";
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import ConfirmBox from "./_components/ConfirmBox";
 
 export default function _CakeBooking() {
-    const { addCakeOrder, hasLoggedIn } = useUser();
+    const { session, loggedIn } = useUserContext();
     const [type, setType] = useState(0);
     const [message, setMessage] = useState("");
     const [quantity, setQuantity] = useState<number | null>(0.0);
@@ -35,7 +34,12 @@ export default function _CakeBooking() {
     useEffect(() => {
         if (isNaN(customQuantity) || (customQuantity < 1 || customQuantity > 10)) setCustomQuantityError(true);
         else setCustomQuantityError(false);
-    }, [customQuantity])
+    }, [customQuantity]);
+
+    const openConfirmBox = (e: MouseEvent) => {
+        e.preventDefault();
+        setModalOpened(true);
+    }
 
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
         setModalOpened(false);
@@ -52,14 +56,14 @@ export default function _CakeBooking() {
                     quantity: quantity || customQuantity,
                     need_candle: candlesRequest,
                     other_request: otherRequest
-                }),
+                })
             });
-
-            await response.json().then(data => addCakeOrder(data.id));
 
             if (!response.ok) {
                 throw new Error('Failed to submit the data. Please try again.')
             }
+
+            response.json().then(data => session.addCakeOrder(data.id));
         } catch (error) {
             setError((error as Error).message);
         } finally {
@@ -124,8 +128,8 @@ export default function _CakeBooking() {
 
                 <textarea placeholder="Other specific requests..." name="otherRequest" id="" cols={50} rows={10} className="outline-none border p-3 rounded resize-none focus:border-blue-400" value={otherRequest} onChange={(e) => setOtherRequest(e.target.value)}></textarea>
 
-                <button className="transition px-5 py-2 border-2 font-semibold rounded-full border-red-500 text-red-500 enabled:hover:text-white enabled:hover:text-white enabled:hover:bg-red-500 disabled:text-slate-400 disabled:border-slate-400 disabled:cursor-not-allowed" disabled={!hasLoggedIn || isLoading || (quantity == null && customQuantityError)} onClick={() => setModalOpened(true)}>
-                    {hasLoggedIn ? (isLoading ? (
+                <button className="transition px-5 py-2 border-2 font-semibold rounded-full border-red-500 text-red-500 enabled:hover:text-white enabled:hover:text-white enabled:hover:bg-red-500 disabled:text-slate-400 disabled:border-slate-400 disabled:cursor-not-allowed" disabled={!loggedIn || isLoading || (quantity == null && customQuantityError)} onClick={openConfirmBox}>
+                    {loggedIn ? (isLoading ? (
                         <>
                             <FontAwesomeIcon className="animate-spin" icon={faSpinner} />   Submitting...
                         </>
@@ -133,36 +137,9 @@ export default function _CakeBooking() {
                 </button>
 
                 <Modal isModalOpen={modalOpened} closeModal={() => setModalOpened(false)} parentStyles="grid place-content-center" overlayStyles="bg-black/[0.6] backdrop-blur-sm">
-                    <ConfirmDialog closeDialog={() => setModalOpened(false)} />
+                    <ConfirmBox closeDialog={() => setModalOpened(false)} />
                 </Modal>
             </form>
         </div>
-    )
-}
-
-const PopupAnimationVariants = {
-    hidden: { y: '50%', opacity: 0 },
-    visible: { y: '0%', opacity: 1 },
-    exit: { y: '50%', opacity: 0 }
-};
-
-const ConfirmDialog = ({ closeDialog }: { closeDialog: () => void }) => {
-    return (
-        <motion.div variants={PopupAnimationVariants} initial="hidden" animate="visible" exit="exit" transition={{ ease: 'easeInOut' }} className="bg-gradient-to-b rounded-xl shadow-lg from-[#38ef7d] to-[#11998e]">
-            <div className="m-2 bg-white rounded-lg z-50 p-12 flex flex-col gap-3">
-                <FontAwesomeIcon className="fa-5x" icon={faTriangleExclamation} />
-                <div className="mb-3">
-                    <h1 className="text-center text-2xl mb-2 font-semibold">Please confirm your order.</h1>
-                    <h2 className="text-center text-lg font-medium text-black text-opacity-60">You cannot make modifications to this order later on.</h2>
-                </div>
-
-                <button id="#confirm" className="transition border-2 border-green-400 hover:text-white hover:bg-green-400 font-semibold rounded-full py-2" type="submit">
-                    Confirm
-                </button>
-                <button id="#close" className="transition border-2 border-red-400 hover:text-white hover:bg-red-400 font-semibold rounded-full py-2" onClick={closeDialog}>
-                    Close
-                </button>
-            </div>
-        </motion.div>
     )
 }
